@@ -3,6 +3,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <string.h>
+#include <vector>
 #include <cerrno>
 
 
@@ -49,7 +50,7 @@ std::string Endpoint::get_sockaddr_ip(const sockaddr_in& _sockaddr) {
     return addr_ip;
 }
 
-ssize_t Endpoint::recv_bytes(std::span<std::byte>& _buffer, sockaddr_in& _sockaddr) {
+ssize_t Endpoint::recv_bytes(std::span<std::byte> _buffer, sockaddr_in& _sockaddr) {
     socklen_t len = sizeof(server_addr);
     ssize_t n = recvfrom(socket_fd, _buffer.data(), _buffer.size() - 1, 0, reinterpret_cast<sockaddr*>(&server_addr), &len);
     if (n < 0) {
@@ -58,12 +59,25 @@ ssize_t Endpoint::recv_bytes(std::span<std::byte>& _buffer, sockaddr_in& _sockad
     return n;
 }
 
-ssize_t Endpoint::send_bytes(std::span<const std::byte>& _buffer, const sockaddr_in& _sockaddr) {
+ssize_t Endpoint::send_bytes(std::span<const std::byte> _buffer, const sockaddr_in& _sockaddr) {
     ssize_t sent = sendto(socket_fd, _buffer.data(), _buffer.size(), 0, reinterpret_cast<const sockaddr*>(&server_addr), sizeof(server_addr));
     if (sent < 0) {
         handle_error();
     }
     return sent;
+}
+
+std::vector<std::byte> Endpoint::make_message(MessageType _type) {
+    std::vector<std::byte> msg = {static_cast<std::byte>(_type)};
+    return msg;
+}
+
+std::vector<std::byte> Endpoint::make_message(MessageType _type, std::vector<std::byte>& _payload) {
+    std::vector<std::byte> msg;
+    msg.reserve(_payload.size() + 1);
+    msg.push_back(static_cast<std::byte>(_type));
+    msg.insert(msg.end(), _payload.begin(), _payload.end());
+    return msg;
 }
 
 // Get functions

@@ -1,8 +1,10 @@
 #pragma once
 
+#include "Protocol.hpp"
 #include <arpa/inet.h>
 #include <string>
 #include <span>
+#include <vector>
 
 class Endpoint {
 private:
@@ -15,8 +17,11 @@ public:
     void initialize_server_addr(int _port, const std::string& _ipaddr);
     void bind_socket();
     std::string get_sockaddr_ip(const sockaddr_in& _sockaddr);
-    ssize_t recv_bytes(std::span<std::byte>& _buffer, sockaddr_in& _sockaddr);
-    ssize_t send_bytes(std::span<const std::byte>& _buffer, const sockaddr_in& _sockaddr);
+    ssize_t recv_bytes(std::span<std::byte> _buffer, sockaddr_in& _sockaddr);
+    ssize_t send_bytes(std::span<const std::byte> _buffer, const sockaddr_in& _sockaddr);
+    std::vector<std::byte> make_message(MessageType _type);
+    std::vector<std::byte> make_message(MessageType _type, std::vector<std::byte>& _payload);
+
     // Get functions
     int get_socket_fd() const;
     const sockaddr_in& get_server_sockaddr() const;
