@@ -9,10 +9,10 @@ a block ([ Description | ... | ... ] is 3 bytes), and each {} is variable size.
 type > [Message type]
 ---
 
-CONNECT > [CONNECT]\n
-OK      > [OK]\n
-GET     > [GET]{Filename}\n
-SIZE    > [SIZE][Amount of packets to be sent | ... ][Size of file in bytes | ... | ... | ... ]\n
-DATA    > [DATA][Number of packet in sequence | ... ][Size of payload | ... ][Checksum | ... ]{Payload}\n
-CLOSE   > [CLOSE]\n
-ERROR   > [ERROR]\n
+CONNECT > [CONNECT]  
+OK      > [OK]  
+GET     > [GET]{Filename}  
+SIZE    > [SIZE][Amount of packets to be sent | ... ][Size of file in bytes | ... | ... | ... ]  
+DATA    > [DATA][Number of packet in sequence | ... ][Size of payload | ... ][Checksum | ... ]{Payload}  
+CLOSE   > [CLOSE]  
+ERROR   > [ERROR]  
