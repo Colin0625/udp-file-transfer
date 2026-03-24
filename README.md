@@ -11,8 +11,8 @@ type > [Message type]
 
 CONNECT > [CONNECT]  
 OK      > [OK]  
-GET     > [GET]{Filename}  
-SIZE    > [SIZE][Amount of packets to be sent | ... ][Size of file in bytes | ... | ... | ... ]  
-DATA    > [DATA][Number of packet in sequence | ... ][Size of payload | ... ][Checksum | ... ]{Payload}  
+GET     > [GET] {Filename}  
+SIZE    > [SIZE] [Amount of packets to be sent | ... ] [Size of file in bytes | ... | ... | ... ]  
+DATA    > [DATA] [Number of packet in sequence | ... ] [Size of payload | ... ] [Checksum | ... ] {Payload}  
 CLOSE   > [CLOSE]  
 ERROR   > [ERROR]  
