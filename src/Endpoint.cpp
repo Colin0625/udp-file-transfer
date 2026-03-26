@@ -90,22 +90,40 @@ std::vector<std::byte> Endpoint::make_ok_message() {
     return make_message(MessageType::OK);
 }
 
-std::vector<std::byte> Endpoint::make_get_message(const std::string& _filename) {
-    return make_message(MessageType::GET, std::as_bytes(std::span{_filename}));
+std::vector<std::byte> Endpoint::make_get_message(const std::string& _filename, const std::string& _file_extension) {
+    uint8_t namesize = _filename.length();
+    uint8_t extsize = _file_extension.length();
+    const std::byte* nameptr = reinterpret_cast<const std::byte*>(&_filename);
+    const std::byte* extptr = reinterpret_cast<const std::byte*>(&_file_extension);
+    std::vector<std::byte> msg(2 + namesize + extsize);
+    msg[0] = static_cast<std::byte>(namesize);
+    msg[1] = static_cast<std::byte>(extsize);
+    msg.insert(msg.begin() + 2, nameptr, nameptr + namesize);
+    msg.insert(msg.begin() + 2 + namesize, extptr, extptr + extsize);
+    return make_message(MessageType::GET, msg);
 }
 
-std::vector<std::byte> Endpoint::make_size_message(uint16_t _numpackets, uint32_t _filesize, const std::string& _filename) {
+std::vector<std::byte> Endpoint::make_size_message(uint16_t _numpackets, uint32_t _filesize, const std::string& _filename, const std::string& _file_extension) {
     std::byte* ptr16 = reinterpret_cast<std::byte*>(&_numpackets);
     std::byte* ptr32 = reinterpret_cast<std::byte*>(&_filesize);
-    std::span<const std::byte> namespan = std::as_bytes(std::span{_filename});
-    std::vector<std::byte> msg(ptr16, ptr16 + sizeof(_numpackets));
-    msg.insert(msg.end(), ptr32, ptr32 + sizeof(_filesize));
-    msg.insert(msg.end(), namespan.begin(), namespan.end());
+    uint8_t namesize = _filename.length();
+    uint8_t extsize = _file_extension.length();
+    const std::byte* nameptr = reinterpret_cast<const std::byte*>(&_filename);
+    const std::byte* extptr = reinterpret_cast<const std::byte*>(&_file_extension);
+    int message_size = sizeof(_numpackets) + sizeof(_filesize) + sizeof(namesize) + sizeof(extsize) + namesize + extsize;
+    std::vector<std::byte> msg(message_size);
+    msg.insert(msg.begin(), ptr16, ptr16 + sizeof(_numpackets));
+    msg.insert(msg.begin() + sizeof(_numpackets), ptr32, ptr32 + sizeof(_filesize));
+    msg[6] = static_cast<std::byte>(namesize);
+    msg[7] = static_cast<std::byte>(extsize);
+    msg.insert(msg.begin() + 8, nameptr, nameptr + namesize);
+    msg.insert(msg.begin() + 8 + namesize, extptr, extptr + extsize);
     return make_message(MessageType::SIZE, msg);
 }
 
-std::vector<std::byte> Endpoint::make_data_message(uint16_t _seqpacket, uint32_t _checksum, std::span<const std::byte> _payload) {
+std::vector<std::byte> Endpoint::make_data_message(uint16_t _seqpacket, std::span<const std::byte> _payload) {
     uint16_t _payloadsize = _payload.size();
+    uint32_t _checksum = checksum(_payload);
     std::byte* seqptr = reinterpret_cast<std::byte*>(&_seqpacket);
     std::byte* psizeptr = reinterpret_cast<std::byte*>(&_payloadsize);
     std::byte* csumptr = reinterpret_cast<std::byte*>(&_checksum);
@@ -125,7 +143,20 @@ std::vector<std::byte> Endpoint::make_error_message(std::string _error) {
 }
 
 uint32_t Endpoint::checksum(std::span<const std::byte> _data) {
-    
+    uint32_t total{};
+    size_t n = _data.size();
+    bool odd = (n % 2 == 1);
+    for (size_t i = 0; i < (n+1)/2; i++) {
+        uint16_t num;
+        if (odd && i == ((n+1)/2) - 1) {
+            num = (static_cast<uint16_t>(_data[i]) << 8) | uint16_t(0);
+        }
+        else {
+            num = (static_cast<uint16_t>(_data[i]) << 8) | (static_cast<uint16_t>(_data[i + 1]));
+        }
+        total = total + num;
+    }
+    return total;
 }
 
 // Get functions

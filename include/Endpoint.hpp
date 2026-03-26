@@ -23,9 +23,9 @@ public:
     std::vector<std::byte> make_message(MessageType _type, std::span<const std::byte> _payload);
     std::vector<std::byte> make_conn_message();
     std::vector<std::byte> make_ok_message();
-    std::vector<std::byte> make_get_message(const std::string& _filename);
-    std::vector<std::byte> make_size_message(uint16_t _numpackets, uint32_t _filesize, const std::string& _filename);
-    std::vector<std::byte> make_data_message(uint16_t _seqpacket, uint32_t _checksum, std::span<const std::byte> _payload);
+    std::vector<std::byte> make_get_message(const std::string& _filename, const std::string& _file_extension);
+    std::vector<std::byte> make_size_message(uint16_t _numpackets, uint32_t _filesize, const std::string& _filename, const std::string& _file_extension);
+    std::vector<std::byte> make_data_message(uint16_t _seqpacket,  std::span<const std::byte> _payload);
     std::vector<std::byte> make_close_message();
     std::vector<std::byte> make_error_message(std::string _error);
     uint32_t checksum(std::span<const std::byte> _data);
