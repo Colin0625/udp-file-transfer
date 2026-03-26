@@ -10,9 +10,8 @@ Client::Client(int _port, std::string _ip) : Endpoint(), port(_port), ip(_ip) {
 }
 
 void Client::send_message(MessageType _t) {
-    make_size_message(uint16_t(17235), 0);
     std::string name = "test.jpg";
-    std::vector<std::byte> data = make_get_message(name);
+    std::vector<std::byte> data = make_error_message(name);
     std::span<const std::byte> msg(data);
     ssize_t sent = send_bytes(msg, get_server_sockaddr());
     std::cout << "Sent message" << std::endl;

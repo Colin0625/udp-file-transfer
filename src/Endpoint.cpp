@@ -90,17 +90,42 @@ std::vector<std::byte> Endpoint::make_ok_message() {
     return make_message(MessageType::OK);
 }
 
-std::vector<std::byte> Endpoint::make_get_message(std::string _filename) {
+std::vector<std::byte> Endpoint::make_get_message(const std::string& _filename) {
     return make_message(MessageType::GET, std::as_bytes(std::span{_filename}));
 }
 
-std::vector<std::byte> Endpoint::make_size_message(uint16_t _numpackets, int32_t _filesize) {
-    uint16_t swapped = htons(_numpackets);
-    char* ptr = reinterpret_cast<char*>(&swapped);
-    std::vector<char> buf(ptr, ptr + 2);
-    std::cout << buf.data() << std::endl;
+std::vector<std::byte> Endpoint::make_size_message(uint16_t _numpackets, uint32_t _filesize, const std::string& _filename) {
+    std::byte* ptr16 = reinterpret_cast<std::byte*>(&_numpackets);
+    std::byte* ptr32 = reinterpret_cast<std::byte*>(&_filesize);
+    std::span<const std::byte> namespan = std::as_bytes(std::span{_filename});
+    std::vector<std::byte> msg(ptr16, ptr16 + sizeof(_numpackets));
+    msg.insert(msg.end(), ptr32, ptr32 + sizeof(_filesize));
+    msg.insert(msg.end(), namespan.begin(), namespan.end());
+    return make_message(MessageType::SIZE, msg);
+}
 
-    return std::vector<std::byte>();
+std::vector<std::byte> Endpoint::make_data_message(uint16_t _seqpacket, uint32_t _checksum, std::span<const std::byte> _payload) {
+    uint16_t _payloadsize = _payload.size();
+    std::byte* seqptr = reinterpret_cast<std::byte*>(&_seqpacket);
+    std::byte* psizeptr = reinterpret_cast<std::byte*>(&_payloadsize);
+    std::byte* csumptr = reinterpret_cast<std::byte*>(&_checksum);
+    std::vector<std::byte> msg(seqptr, seqptr + sizeof(_seqpacket));
+    msg.insert(msg.end(), psizeptr, psizeptr + sizeof(_payloadsize));
+    msg.insert(msg.end(), csumptr, csumptr + sizeof(_checksum));
+    msg.insert(msg.end(), _payload.begin(), _payload.end());
+    return make_message(MessageType::DATA, msg);
+}
+
+std::vector<std::byte> Endpoint::make_close_message() {
+    return make_message(MessageType::CLOSE);
+}
+
+std::vector<std::byte> Endpoint::make_error_message(std::string _error) {
+    return make_message(MessageType::ERROR, std::as_bytes(std::span{_error}));
+}
+
+uint32_t Endpoint::checksum(std::span<const std::byte> _data) {
+    
 }
 
 // Get functions

@@ -1,5 +1,5 @@
 CXX = g++-12
-FLAGS = -std=c++23 -Iinclude
+FLAGS = -std=c++20 -Iinclude
 
 
 all: server_main client_main
