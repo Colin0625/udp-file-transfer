@@ -19,4 +19,8 @@ void Server::receive_message() {
     std::vector<std::byte> buffer(1024);
     ssize_t n = recv_bytes(buffer, client_addr);
     std::cout << static_cast<int>(buffer[0]) << std::endl;
+    std::span<std::byte> msg(buffer.begin() + 1, buffer.end());
+    std::string s(reinterpret_cast<const char*>(msg.data()), msg.size());
+    std::cout << s << std::endl;
 }
+

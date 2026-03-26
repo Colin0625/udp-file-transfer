@@ -20,7 +20,11 @@ public:
     ssize_t recv_bytes(std::span<std::byte> _buffer, sockaddr_in& _sockaddr);
     ssize_t send_bytes(std::span<const std::byte> _buffer, const sockaddr_in& _sockaddr);
     std::vector<std::byte> make_message(MessageType _type);
-    std::vector<std::byte> make_message(MessageType _type, std::vector<std::byte>& _payload);
+    std::vector<std::byte> make_message(MessageType _type, std::span<const std::byte> _payload);
+    std::vector<std::byte> make_conn_message();
+    std::vector<std::byte> make_ok_message();
+    std::vector<std::byte> make_get_message(std::string _filename);
+    std::vector<std::byte> make_size_message(uint16_t _packets, int32_t _fsize);
 
     // Get functions
     int get_socket_fd() const;

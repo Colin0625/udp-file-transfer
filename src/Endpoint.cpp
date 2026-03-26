@@ -5,6 +5,8 @@
 #include <string.h>
 #include <vector>
 #include <cerrno>
+#include <cstdint>
+#include <bit>
 
 
 Endpoint::Endpoint() {
@@ -72,12 +74,33 @@ std::vector<std::byte> Endpoint::make_message(MessageType _type) {
     return msg;
 }
 
-std::vector<std::byte> Endpoint::make_message(MessageType _type, std::vector<std::byte>& _payload) {
+std::vector<std::byte> Endpoint::make_message(MessageType _type, std::span<const std::byte> _payload) {
     std::vector<std::byte> msg;
     msg.reserve(_payload.size() + 1);
     msg.push_back(static_cast<std::byte>(_type));
     msg.insert(msg.end(), _payload.begin(), _payload.end());
     return msg;
+}
+
+std::vector<std::byte> Endpoint::make_conn_message() {
+    return make_message(MessageType::CONNECT);
+}
+
+std::vector<std::byte> Endpoint::make_ok_message() {
+    return make_message(MessageType::OK);
+}
+
+std::vector<std::byte> Endpoint::make_get_message(std::string _filename) {
+    return make_message(MessageType::GET, std::as_bytes(std::span{_filename}));
+}
+
+std::vector<std::byte> Endpoint::make_size_message(uint16_t _numpackets, int32_t _filesize) {
+    uint16_t swapped = htons(_numpackets);
+    char* ptr = reinterpret_cast<char*>(&swapped);
+    std::vector<char> buf(ptr, ptr + 2);
+    std::cout << buf.data() << std::endl;
+
+    return std::vector<std::byte>();
 }
 
 // Get functions
