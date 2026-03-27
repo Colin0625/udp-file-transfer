@@ -7,6 +7,7 @@
 #include <cerrno>
 #include <cstdint>
 #include <bit>
+#include <fstream>
 
 
 Endpoint::Endpoint() {
@@ -90,34 +91,28 @@ std::vector<std::byte> Endpoint::make_ok_message() {
     return make_message(MessageType::OK);
 }
 
-std::vector<std::byte> Endpoint::make_get_message(const std::string& _filename, const std::string& _file_extension) {
+std::vector<std::byte> Endpoint::make_get_message(const std::string& _filename) {
     uint8_t namesize = _filename.length();
-    uint8_t extsize = _file_extension.length();
     const std::byte* nameptr = reinterpret_cast<const std::byte*>(&_filename);
-    const std::byte* extptr = reinterpret_cast<const std::byte*>(&_file_extension);
-    std::vector<std::byte> msg(2 + namesize + extsize);
+
+    std::vector<std::byte> msg(2 + namesize);
     msg[0] = static_cast<std::byte>(namesize);
-    msg[1] = static_cast<std::byte>(extsize);
-    msg.insert(msg.begin() + 2, nameptr, nameptr + namesize);
-    msg.insert(msg.begin() + 2 + namesize, extptr, extptr + extsize);
+    msg.insert(msg.begin() + 1, nameptr, nameptr + namesize);
     return make_message(MessageType::GET, msg);
 }
 
-std::vector<std::byte> Endpoint::make_size_message(uint16_t _numpackets, uint32_t _filesize, const std::string& _filename, const std::string& _file_extension) {
+std::vector<std::byte> Endpoint::make_size_message(uint16_t _numpackets, uint32_t _filesize, const std::string& _filename) {
     std::byte* ptr16 = reinterpret_cast<std::byte*>(&_numpackets);
     std::byte* ptr32 = reinterpret_cast<std::byte*>(&_filesize);
     uint8_t namesize = _filename.length();
-    uint8_t extsize = _file_extension.length();
     const std::byte* nameptr = reinterpret_cast<const std::byte*>(&_filename);
-    const std::byte* extptr = reinterpret_cast<const std::byte*>(&_file_extension);
-    int message_size = sizeof(_numpackets) + sizeof(_filesize) + sizeof(namesize) + sizeof(extsize) + namesize + extsize;
+    int message_size = sizeof(_numpackets) + sizeof(_filesize) + sizeof(namesize) + namesize;
+
     std::vector<std::byte> msg(message_size);
     msg.insert(msg.begin(), ptr16, ptr16 + sizeof(_numpackets));
     msg.insert(msg.begin() + sizeof(_numpackets), ptr32, ptr32 + sizeof(_filesize));
     msg[6] = static_cast<std::byte>(namesize);
-    msg[7] = static_cast<std::byte>(extsize);
-    msg.insert(msg.begin() + 8, nameptr, nameptr + namesize);
-    msg.insert(msg.begin() + 8 + namesize, extptr, extptr + extsize);
+    msg.insert(msg.begin() + 7, nameptr, nameptr + namesize);
     return make_message(MessageType::SIZE, msg);
 }
 
@@ -127,10 +122,12 @@ std::vector<std::byte> Endpoint::make_data_message(uint16_t _seqpacket, std::spa
     std::byte* seqptr = reinterpret_cast<std::byte*>(&_seqpacket);
     std::byte* psizeptr = reinterpret_cast<std::byte*>(&_payloadsize);
     std::byte* csumptr = reinterpret_cast<std::byte*>(&_checksum);
-    std::vector<std::byte> msg(seqptr, seqptr + sizeof(_seqpacket));
-    msg.insert(msg.end(), psizeptr, psizeptr + sizeof(_payloadsize));
-    msg.insert(msg.end(), csumptr, csumptr + sizeof(_checksum));
-    msg.insert(msg.end(), _payload.begin(), _payload.end());
+
+    std::vector<std::byte> msg(sizeof(_seqpacket) + sizeof(_payloadsize) + sizeof(_checksum) + _payloadsize);
+    msg.insert(msg.begin(), seqptr, seqptr + sizeof(_seqpacket));
+    msg.insert(msg.begin() + sizeof(_seqpacket), psizeptr, psizeptr + sizeof(_payloadsize));
+    msg.insert(msg.begin() + sizeof(_seqpacket) + sizeof(_payloadsize), csumptr, csumptr + sizeof(_checksum));
+    msg.insert(msg.begin() + sizeof(_seqpacket) + sizeof(_payloadsize) + sizeof(_checksum), _payload.begin(), _payload.end());
     return make_message(MessageType::DATA, msg);
 }
 

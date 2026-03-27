@@ -8,6 +8,10 @@ private:
     int port;
     std::string ip;
 public:
-    Client(int _port, std::string _ip);
-    void send_message(MessageType _t);
+    Client();
+    int connect_to_server(int _port, std::string _ip);
+    int request_file(std::string& _filename);
+    int receive_file_size(sockaddr_in& _addr);
+    int receive_file_data(sockaddr_in& _addr, int _numpackets, int _filesize, std::string& _filename);
+    
 };
