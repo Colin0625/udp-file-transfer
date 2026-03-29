@@ -1,6 +1,6 @@
 UDP File Transfer
 ---
-This repo is currently in development
+CURRENTLY BEING REWRITTEN IN THE rewrite BRANCH
 ---
 Here are the types of messages the program sends for conection and data transfer.
 It is laid out with this format, where each [] is a byte, | separates bytes within
