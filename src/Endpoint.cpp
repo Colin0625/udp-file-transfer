@@ -7,7 +7,6 @@
 #include <cerrno>
 #include <cstdint>
 #include <bit>
-#include <fstream>
 
 
 Endpoint::Endpoint() {
@@ -93,11 +92,11 @@ std::vector<std::byte> Endpoint::make_ok_message() {
 
 std::vector<std::byte> Endpoint::make_get_message(const std::string& _filename) {
     uint8_t namesize = _filename.length();
-    const std::byte* nameptr = reinterpret_cast<const std::byte*>(&_filename);
+    const std::byte* nameptr = reinterpret_cast<const std::byte*>(_filename.data());
 
     std::vector<std::byte> msg(2 + namesize);
     msg[0] = static_cast<std::byte>(namesize);
-    msg.insert(msg.begin() + 1, nameptr, nameptr + namesize);
+    std::copy(nameptr, nameptr + namesize, msg.begin() + 1);
     return make_message(MessageType::GET, msg);
 }
 
@@ -105,7 +104,7 @@ std::vector<std::byte> Endpoint::make_size_message(uint16_t _numpackets, uint32_
     std::byte* ptr16 = reinterpret_cast<std::byte*>(&_numpackets);
     std::byte* ptr32 = reinterpret_cast<std::byte*>(&_filesize);
     uint8_t namesize = _filename.length();
-    const std::byte* nameptr = reinterpret_cast<const std::byte*>(&_filename);
+    const std::byte* nameptr = reinterpret_cast<const std::byte*>(_filename.data());
     int message_size = sizeof(_numpackets) + sizeof(_filesize) + sizeof(namesize) + namesize;
 
     std::vector<std::byte> msg(message_size);

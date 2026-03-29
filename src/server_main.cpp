@@ -4,5 +4,6 @@ int main() {
     Server server;
     server.start(5000);
     server.receive_message();
+    server.receive_message();
     return 0;
 }

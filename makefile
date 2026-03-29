@@ -19,8 +19,9 @@ server_main: Endpoint.o Server.o src/server_main.cpp
 client_main: Endpoint.o Client.o src/client_main.cpp
 	$(CXX) $(FLAGS) Endpoint.o Client.o src/client_main.cpp -o client.out
 
-
-
+debug:
+	$(CXX) $(FLAGS) -g src/Endpoint.cpp src/Server.cpp src/server_main.cpp -o server.out
+	$(CXX) $(FLAGS) -g src/Endpoint.cpp src/Client.cpp src/client_main.cpp -o client.out
 
 clean:
 	rm -f *.out *.o
