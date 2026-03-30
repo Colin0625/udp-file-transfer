@@ -1,5 +1,5 @@
-#include "SocketAddress.hpp"
-#include "UdpSocket.hpp"
+#include "net/SocketAddress.hpp"
+#include "net/UdpSocket.hpp"
 #include <string>
 #include <cstddef>
 #include <vector>
@@ -15,8 +15,8 @@ int main() {
     std::byte* msgptr = reinterpret_cast<std::byte*>(msg.data());
 
     std::vector<std::byte> payload(msgptr, msgptr + msg.size());
-    sock.send_to(payload, server_addr);
-    std::cout << "Sent message to server" << std::endl;
+    int sent = sock.send_to(payload, server_addr);
+    std::cout << "Sent " << sent << " bytes to the server" << std::endl;
 
     return 1;
 }

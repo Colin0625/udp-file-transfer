@@ -3,17 +3,17 @@ FLAGS = -std=c++20 -Iinclude
 
 all: server client
 
-SocketAddress.o: src/SocketAddress.cpp include/SocketAddress.hpp
-	$(CXX) $(FLAGS) -c src/SocketAddress.cpp -o SocketAddress.o
+SocketAddress.o: src/net/SocketAddress.cpp include/net/SocketAddress.hpp
+	$(CXX) $(FLAGS) -c src/net/SocketAddress.cpp -o SocketAddress.o
 
-UdpSocket.o: src/UdpSocket.cpp include/UdpSocket.hpp SocketAddress.o
-	$(CXX) $(FLAGS) -c src/UdpSocket.cpp -o UdpSocket.o
+UdpSocket.o: src/net/UdpSocket.cpp include/net/UdpSocket.hpp SocketAddress.o
+	$(CXX) $(FLAGS) -c src/net/UdpSocket.cpp -o UdpSocket.o
 
-server: SocketAddress.o UdpSocket.o src/server.cpp
-	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o src/server.cpp -o server.out
+server: SocketAddress.o UdpSocket.o src/server_main.cpp
+	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o src/server_main.cpp -o server.out
 
-client: SocketAddress.o UdpSocket.o src/client.cpp
-	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o src/client.cpp -o client.out
+client: SocketAddress.o UdpSocket.o src/client_main.cpp
+	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o src/client_main.cpp -o client.out
 
 
 clean:

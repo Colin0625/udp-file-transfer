@@ -1,4 +1,4 @@
-#include "UdpSocket.hpp"
+#include "net/UdpSocket.hpp"
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <string.h>
@@ -30,7 +30,7 @@ ssize_t UdpSocket::send_to(std::span<const std::byte> buffer, const SocketAddres
 ssize_t UdpSocket::receive_from(std::span<std::byte> buffer, SocketAddress& addr) {
     std::byte* buffer_ptr = reinterpret_cast<std::byte*>(buffer.data());
     socklen_t len = addr.size();
-    ssize_t n = recvfrom(socket_fd_, buffer_ptr, sizeof(buffer), 0, addr.data(), &len);
+    ssize_t n = recvfrom(socket_fd_, buffer_ptr, buffer.size(), 0, addr.data(), &len);
     if (n < 0) {
         throw std::runtime_error(std::string("receive_from failed: ") + strerror(errno));
     }
