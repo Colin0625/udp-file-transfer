@@ -18,7 +18,7 @@ void UdpSocket::bind_socket(const SocketAddress& addr) {
     }
 }
 
-ssize_t UdpSocket::send_to(std::span<std::byte> buffer, const SocketAddress& addr) {
+ssize_t UdpSocket::send_to(std::span<const std::byte> buffer, const SocketAddress& addr) {
     const std::byte* payload = reinterpret_cast<const std::byte*>(buffer.data());
     ssize_t sent = sendto(socket_fd_, payload, buffer.size(), 0, addr.data(), addr.size());
     if (sent < 0) {
@@ -29,7 +29,8 @@ ssize_t UdpSocket::send_to(std::span<std::byte> buffer, const SocketAddress& add
 
 ssize_t UdpSocket::receive_from(std::span<std::byte> buffer, SocketAddress& addr) {
     std::byte* buffer_ptr = reinterpret_cast<std::byte*>(buffer.data());
-    ssize_t n = recvfrom(socket_fd_, buffer_ptr, sizeof(buffer), 0, addr.data(), addr.size());
+    socklen_t len = addr.size();
+    ssize_t n = recvfrom(socket_fd_, buffer_ptr, sizeof(buffer), 0, addr.data(), &len);
     if (n < 0) {
         throw std::runtime_error(std::string("receive_from failed: ") + strerror(errno));
     }
