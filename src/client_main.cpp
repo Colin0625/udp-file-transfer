@@ -26,5 +26,11 @@ int main() {
 
     Packet pack = Packet::parse(re, n);
 
+    std::cout << "Received " << n << " bytes from the client" << std::endl;
+    for (std::byte b : pack.get_payload()) {
+        std::cout << static_cast<char>(b);
+    }
+    std::cout << std::endl;
+
     return 1;
 }
