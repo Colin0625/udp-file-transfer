@@ -12,14 +12,21 @@ UdpSocket.o: src/net/UdpSocket.cpp include/net/UdpSocket.hpp SocketAddress.o
 Packet.o: src/protocol/Packet.cpp include/protocol/Packet.hpp include/protocol/PacketHeader.hpp include/protocol/MessageType.hpp
 	$(CXX) $(FLAGS) -c src/protocol/Packet.cpp -o Packet.o
 
+FilePackager.o: src/packaging/FilePackager.cpp include/packaging/FilePackager.hpp Packet.o include/protocol/MessageType.hpp include/protocol/PacketHeader.hpp
+	$(CXX) $(FLAGS) -c src/packaging/FilePackager.cpp -o FilePackager.o
+
+FileReassembler.o: src/packaging/FileReassembler.cpp include/packaging/FileReassembler.hpp Packet.o include/protocol/MessageType.hpp include/protocol/PacketHeader.hpp FilePackager.o
+	$(CXX) $(FLAGS) -c src/packaging/FileReassembler.cpp -o FileReassembler.o
+
+
 server: SocketAddress.o UdpSocket.o Packet.o src/server_main.cpp
 	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o Packet.o src/server_main.cpp -o server.out
 
 client: SocketAddress.o UdpSocket.o Packet.o src/client_main.cpp
 	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o Packet.o src/client_main.cpp -o client.out
 
-test: include/packaging/FilePackager.hpp src/packaging/FilePackager.cpp src/FilePackagerTester.cpp include/protocol/PacketHeader.hpp include/protocol/MessageType.hpp
-	$(CXX) $(FLAGS) src/protocol/Packet.cpp src/packaging/FilePackager.cpp src/FilePackagerTester.cpp src/packaging/FileReassembler.cpp -o test.out
+test: FilePackager.o Packet.o FileReassembler.o src/FilePackagerTester.cpp
+	$(CXX) $(FLAGS) Packet.o FilePackager.o FileReassembler.o src/FilePackagerTester.cpp -o test.out
 
 
 clean:
