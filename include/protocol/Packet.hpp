@@ -15,7 +15,7 @@ private:
 public:
     Packet(MessageType type, uint32_t sequence_number, std::span<const std::byte> payload);
     Packet(const PacketHeader& header, std::span<const std::byte> payload);
-    static Packet parse(std::span<const std::byte> bytes);
+    static Packet parse(std::span<const std::byte> bytes, ssize_t len);
     std::vector<std::byte> serialize() const;
 
     const std::vector<std::byte>& get_payload() const {

@@ -15,28 +15,34 @@ Packet::Packet(const PacketHeader& header, std::span<const std::byte> payload)
  : header_(header), payload_(payload.begin(), payload.end()) 
 {}
 
-Packet Packet::parse(std::span<const std::byte> bytes) {
-    MessageType type = static_cast<MessageType>(bytes[0]);
+Packet Packet::parse(std::span<const std::byte> bytes, ssize_t len) {
+    if (len < 0) {
+        throw std::runtime_error("Failed to receive bytes");
+    }
+
+    std::span<const std::byte> msg = bytes.subspan(0, len);
+
+    MessageType type = static_cast<MessageType>(msg[0]);
 
     uint16_t payload_size =
-        (static_cast<uint16_t>(std::to_integer<uint8_t>(bytes[1])) << 8) |
-         static_cast<uint16_t>(std::to_integer<uint8_t>(bytes[2]));
+        (static_cast<uint16_t>(std::to_integer<uint8_t>(msg[1])) << 8) |
+         static_cast<uint16_t>(std::to_integer<uint8_t>(msg[2]));
 
     uint32_t sequence_number =
-        (static_cast<uint32_t>(std::to_integer<uint8_t>(bytes[3])) << 24) |
-        (static_cast<uint32_t>(std::to_integer<uint8_t>(bytes[4])) << 16) |
-        (static_cast<uint32_t>(std::to_integer<uint8_t>(bytes[5])) << 8)  |
-         static_cast<uint32_t>(std::to_integer<uint8_t>(bytes[6]));
+        (static_cast<uint32_t>(std::to_integer<uint8_t>(msg[3])) << 24) |
+        (static_cast<uint32_t>(std::to_integer<uint8_t>(msg[4])) << 16) |
+        (static_cast<uint32_t>(std::to_integer<uint8_t>(msg[5])) << 8)  |
+         static_cast<uint32_t>(std::to_integer<uint8_t>(msg[6]));
 
     uint32_t checksum =
-        (static_cast<uint32_t>(std::to_integer<uint8_t>(bytes[7])) << 24) |
-        (static_cast<uint32_t>(std::to_integer<uint8_t>(bytes[8])) << 16) |
-        (static_cast<uint32_t>(std::to_integer<uint8_t>(bytes[9])) << 8)  |
-         static_cast<uint32_t>(std::to_integer<uint8_t>(bytes[10]));
+        (static_cast<uint32_t>(std::to_integer<uint8_t>(msg[7])) << 24) |
+        (static_cast<uint32_t>(std::to_integer<uint8_t>(msg[8])) << 16) |
+        (static_cast<uint32_t>(std::to_integer<uint8_t>(msg[9])) << 8)  |
+         static_cast<uint32_t>(std::to_integer<uint8_t>(msg[10]));
 
     return Packet(
         PacketHeader(type, payload_size, sequence_number, checksum),
-        bytes.subspan(PacketHeader::header_size, payload_size)
+        msg.subspan(PacketHeader::header_size, payload_size)
     );
 }
 
