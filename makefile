@@ -9,11 +9,14 @@ SocketAddress.o: src/net/SocketAddress.cpp include/net/SocketAddress.hpp
 UdpSocket.o: src/net/UdpSocket.cpp include/net/UdpSocket.hpp SocketAddress.o
 	$(CXX) $(FLAGS) -c src/net/UdpSocket.cpp -o UdpSocket.o
 
-server: SocketAddress.o UdpSocket.o src/server_main.cpp
-	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o src/server_main.cpp -o server.out
+Packet.o: src/protocol/Packet.cpp include/protocol/Packet.hpp include/protocol/PacketHeader.hpp include/protocol/MessageType.hpp
+	$(CXX) $(FLAGS) -c src/protocol/Packet.cpp -o Packet.o
 
-client: SocketAddress.o UdpSocket.o src/client_main.cpp
-	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o src/client_main.cpp -o client.out
+server: SocketAddress.o UdpSocket.o Packet.o src/server_main.cpp
+	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o Packet.o src/server_main.cpp -o server.out
+
+client: SocketAddress.o UdpSocket.o Packet.o src/client_main.cpp
+	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o Packet.o src/client_main.cpp -o client.out
 
 
 clean:

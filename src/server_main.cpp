@@ -1,5 +1,6 @@
 #include "net/SocketAddress.hpp"
 #include "net/UdpSocket.hpp"
+#include "protocol/Packet.hpp"
 #include <vector>
 #include <cstddef>
 #include <iostream>
@@ -14,8 +15,12 @@ int main() {
     SocketAddress sender_addr{};
     ssize_t n = sock.receive_from(buffer, sender_addr);
     std::cout << "Received " << n << " bytes: " << std::endl;
-    for (int i = 0; i < n; i++) {
-        std::cout << static_cast<char>(buffer[i]);
+
+    std::span<std::byte> sp(buffer.begin(), buffer.begin() + n);
+
+    Packet p = Packet::parse(sp);
+    for (std::byte b : p.get_payload()) {
+        std::cout << static_cast<char>(b);
     }
     std::cout << std::endl;
     return 1;
