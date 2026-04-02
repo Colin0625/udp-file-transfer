@@ -42,12 +42,12 @@ Packet Packet::parse(std::span<const std::byte> bytes, ssize_t len) {
 
     return Packet(
         PacketHeader(type, payload_size, sequence_number, checksum),
-        msg.subspan(PacketHeader::header_size, payload_size)
+        msg.subspan(PacketHeader::header_size_, payload_size)
     );
 }
 
 std::vector<std::byte> Packet::serialize() const {
-    std::vector<std::byte> buffer(PacketHeader::header_size + payload_.size());
+    std::vector<std::byte> buffer(PacketHeader::header_size_ + payload_.size());
 
     buffer[0] = static_cast<std::byte>(header_.type_);
 
@@ -64,7 +64,7 @@ std::vector<std::byte> Packet::serialize() const {
     buffer[9] = static_cast<std::byte>((header_.checksum_ >> 8) & 0xFF);
     buffer[10] = static_cast<std::byte>(header_.checksum_ & 0xFF);
 
-    std::copy(payload_.begin(), payload_.end(), buffer.begin() + PacketHeader::header_size);
+    std::copy(payload_.begin(), payload_.end(), buffer.begin() + PacketHeader::header_size_);
 
     return buffer;
 }
