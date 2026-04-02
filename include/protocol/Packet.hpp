@@ -19,7 +19,7 @@ public:
     static Packet parse(std::span<const std::byte> bytes, ssize_t len);
     std::vector<std::byte> serialize() const;
 
-    const std::vector<std::byte>& get_payload() const {
-        return payload_;
-    }
+
+    const std::vector<std::byte>& get_payload() const;
+    void print() const;
 };

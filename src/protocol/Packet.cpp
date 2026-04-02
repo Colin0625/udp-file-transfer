@@ -3,6 +3,7 @@
 #include "protocol/MessageType.hpp"
 #include <stdexcept>
 #include <arpa/inet.h>
+#include <iostream>
 
 
 Packet::Packet(MessageType type, uint32_t sequence_number, std::span<const std::byte> payload)
@@ -86,4 +87,17 @@ bool Packet::compare_checksum(PacketHeader header, std::span<const std::byte> by
         return false;
     }
     return true;
+}
+
+const std::vector<std::byte>& Packet::get_payload() const {
+    return payload_;
+}
+
+void Packet::print() const {
+    std::cout << "Packet contents" << std::endl;
+    std::cout << "Packet type: " << static_cast<int>(header_.type_) << std::endl;
+    std::cout << "Packet payload size: " << header_.payload_size_ << std::endl;
+    std::cout << "Packet sequence number: " << header_.sequence_number_ << std::endl;
+    std::cout << "Packet checksum: " << header_.checksum_ << std::endl;
+    std::cout << std::endl;
 }
