@@ -2,6 +2,7 @@
 #include "include/protocol/MessageType.hpp"
 #include <string>
 #include <fstream>
+#include <vector>
 
 class FilePackager {
 private:
@@ -10,8 +11,8 @@ private:
     uint64_t number_of_packets_;
 
 public:
-    FilePackager(std::string filename);
-
+    FilePackager(const std::string& filename);
+    std::vector<char> get_packet(uint64_t packet_number);
 
 
 
