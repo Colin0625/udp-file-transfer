@@ -5,6 +5,7 @@
 #include <vector>
 #include <cstddef>
 #include <span>
+#include <sys/types.h>
 
 class Packet {
 private:

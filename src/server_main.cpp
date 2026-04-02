@@ -18,7 +18,7 @@ int main() {
 
     std::span<std::byte> sp(buffer.begin(), buffer.begin() + n);
 
-    Packet p = Packet::parse(sp);
+    Packet p = Packet::parse(sp, n);
     for (std::byte b : p.get_payload()) {
         std::cout << static_cast<char>(b);
     }
