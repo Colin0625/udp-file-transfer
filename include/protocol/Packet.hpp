@@ -21,5 +21,6 @@ public:
 
 
     const std::vector<std::byte>& get_payload() const;
+    const PacketHeader& get_header() const;
     void print() const;
 };

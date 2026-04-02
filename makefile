@@ -18,8 +18,8 @@ server: SocketAddress.o UdpSocket.o Packet.o src/server_main.cpp
 client: SocketAddress.o UdpSocket.o Packet.o src/client_main.cpp
 	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o Packet.o src/client_main.cpp -o client.out
 
-test: include/transfer/FilePackager.hpp src/transfer/FilePackager.cpp src/FilePackagerTester.cpp include/protocol/PacketHeader.hpp include/protocol/MessageType.hpp
-	$(CXX) $(FLAGS) src/protocol/Packet.cpp src/transfer/FilePackager.cpp src/FilePackagerTester.cpp -o test.out
+test: include/packaging/FilePackager.hpp src/packaging/FilePackager.cpp src/FilePackagerTester.cpp include/protocol/PacketHeader.hpp include/protocol/MessageType.hpp
+	$(CXX) $(FLAGS) src/protocol/Packet.cpp src/packaging/FilePackager.cpp src/FilePackagerTester.cpp src/packaging/FileReassembler.cpp -o test.out
 
 
 clean:

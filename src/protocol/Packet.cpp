@@ -93,6 +93,10 @@ const std::vector<std::byte>& Packet::get_payload() const {
     return payload_;
 }
 
+const PacketHeader& Packet::get_header() const {
+    return header_;
+}
+
 void Packet::print() const {
     std::cout << "Packet contents" << std::endl;
     std::cout << "Packet type: " << static_cast<int>(header_.type_) << std::endl;
