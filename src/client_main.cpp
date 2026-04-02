@@ -23,7 +23,7 @@ int main() {
     SocketAddress sender_addr{};
     int n = sock.receive_from(re, sender_addr);
 
-    Packet p = Packet::parse(re);
+    Packet p = Packet::parse(re, n);
 
     return 1;
 }
