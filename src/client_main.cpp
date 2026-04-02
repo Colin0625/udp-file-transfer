@@ -19,6 +19,7 @@ int main() {
 
     int sent = sock.send_to(p.serialize(), server_addr);
     std::cout << "Sent " << sent << " bytes to the server" << std::endl;
+    
     std::vector<std::byte> re(1024);
     SocketAddress sender_addr{};
     int n = sock.receive_from(re, sender_addr);

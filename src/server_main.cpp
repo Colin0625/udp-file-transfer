@@ -23,5 +23,13 @@ int main() {
         std::cout << static_cast<char>(b);
     }
     std::cout << std::endl;
+
+    std::string msg = "Thanks for the message, this is the server.";
+    std::vector<std::byte> buf(reinterpret_cast<std::byte*>(msg.data()), reinterpret_cast<std::byte*>(msg.data()) + msg.size());
+    Packet p(MessageType::DATA, 67, buf);
+
+    int sent = sock.send_to(p.serialize(), sender_addr);
+    std::cout << "Sent " << sent << " bytes to the client" << std::endl;
+
     return 1;
 }
