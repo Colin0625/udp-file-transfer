@@ -28,6 +28,5 @@ client: SocketAddress.o UdpSocket.o Packet.o src/client_main.cpp
 test: FilePackager.o Packet.o FileReassembler.o src/FilePackagerTester.cpp
 	$(CXX) $(FLAGS) Packet.o FilePackager.o FileReassembler.o src/FilePackagerTester.cpp -o test.out
 
-
 clean:
 	rm -f *.o *.out
