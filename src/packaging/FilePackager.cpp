@@ -3,6 +3,9 @@
 #include <fstream>
 #include <cstddef>
 
+
+FilePackager::FilePackager() : file_{}, file_size_bytes_{}, number_of_packets_{}, filename_{} {}
+
 FilePackager::FilePackager(const std::string& filename) : file_(filename, std::ios::binary), filename_(filename) {
     file_.seekg(0, std::ios::end);
     file_size_bytes_ = file_.tellg();

@@ -17,4 +17,7 @@ struct PacketHeader {
     
     PacketHeader(MessageType type, uint16_t payload_size, uint32_t sequence_number) 
     : type_(type), payload_size_(payload_size), sequence_number_(sequence_number), checksum_{} {}
+
+    PacketHeader(MessageType type) 
+    : type_(type), payload_size_{}, sequence_number_{}, checksum_{} {}
 };

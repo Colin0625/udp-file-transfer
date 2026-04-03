@@ -17,4 +17,5 @@ public:
     socklen_t size() const;
     const sockaddr* data() const;
     sockaddr* data();
+    std::string get_ip() const;
 };

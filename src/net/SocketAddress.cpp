@@ -43,3 +43,11 @@ const sockaddr* SocketAddress::data() const {
 sockaddr* SocketAddress::data() {
     return reinterpret_cast<sockaddr*>(&address_);
 }
+
+std::string SocketAddress::get_ip() const {
+    char addr_ip[INET_ADDRSTRLEN];
+    if (inet_ntop(AF_INET, &address_.sin_addr, addr_ip, sizeof(addr_ip)) == nullptr) {
+        return {};
+    }
+    return std::string(addr_ip);
+}

@@ -18,12 +18,18 @@ FilePackager.o: src/packaging/FilePackager.cpp include/packaging/FilePackager.hp
 FileReassembler.o: src/packaging/FileReassembler.cpp include/packaging/FileReassembler.hpp Packet.o include/protocol/MessageType.hpp include/protocol/PacketHeader.hpp FilePackager.o
 	$(CXX) $(FLAGS) -c src/packaging/FileReassembler.cpp -o FileReassembler.o
 
+ServerSession.o: UdpSocket.o FilePackager.o include/transfer/ServerSession.hpp
+	$(CXX) $(FLAGS) -c src/transfer/ServerSession.cpp -o ServerSession.o
 
-server: SocketAddress.o UdpSocket.o Packet.o src/server_main.cpp
-	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o Packet.o src/server_main.cpp -o server.out
+ClientSession.o: UdpSocket.o FileReassembler.o include/transfer/ServerSession.hpp
+	$(CXX) $(FLAGS) -c src/transfer/ClientSession.cpp -o ClientSession.o
 
-client: SocketAddress.o UdpSocket.o Packet.o src/client_main.cpp
-	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o Packet.o src/client_main.cpp -o client.out
+
+server: SocketAddress.o UdpSocket.o Packet.o FilePackager.o FileReassembler.o ServerSession.o src/server_main.cpp
+	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o Packet.o FilePackager.o FileReassembler.o ServerSession.o src/server_main.cpp -o server.out
+
+client: SocketAddress.o UdpSocket.o Packet.o FilePackager.o FileReassembler.o ClientSession.o src/client_main.cpp
+	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o Packet.o FilePackager.o FileReassembler.o ClientSession.o src/client_main.cpp -o client.out
 
 test: FilePackager.o Packet.o FileReassembler.o src/FilePackagerTester.cpp
 	$(CXX) $(FLAGS) Packet.o FilePackager.o FileReassembler.o src/FilePackagerTester.cpp -o test.out

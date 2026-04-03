@@ -1,7 +1,18 @@
-#include "protocol/Packet.hpp"
-#include "protocol/PacketHeader.hpp"
-#include "protocol/MessageType.hpp"
-#include "net/SocketAddress.hpp"
 #include "net/UdpSocket.hpp"
-#include "packaging/FilePackager.hpp"
 #include "packaging/FileReassembler.hpp"
+#include <string>
+
+class ClientSession {
+private:
+    UdpSocket socket_;
+    SocketAddress server_address_;
+    FileReassembler file_reassembler_;
+
+public:
+    ClientSession();
+    void connect_to_server(uint16_t port, const std::string& ip_addr);
+
+
+
+
+};

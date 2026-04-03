@@ -16,6 +16,10 @@ Packet::Packet(const PacketHeader& header, std::span<const std::byte> payload)
  : header_(header), payload_(payload.begin(), payload.end()) 
 {}
 
+Packet::Packet(MessageType type)
+ : header_(type), payload_{}
+{}
+
 Packet Packet::parse(std::span<const std::byte> bytes, ssize_t len) {
     if (len < 0) {
         throw std::runtime_error("Failed to receive bytes");

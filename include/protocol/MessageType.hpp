@@ -5,10 +5,12 @@
 enum class MessageType : uint8_t {
     SYN         = 1,
     ACK         = 2,
-    GET         = 3,
-    METADATA    = 4,
-    DATA        = 5,
-    COMPLETE    = 6,
-    RETRANSMIT  = 7,
-    ERROR       = 8
+    SYNACK      = 3,
+    GET         = 4,
+    METADATA    = 5,
+    DATA        = 6,
+    COMPLETE    = 7,
+    RETRANSMIT  = 8,
+    ERROR       = 9,
+
 };
