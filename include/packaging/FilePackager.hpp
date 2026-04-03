@@ -13,6 +13,7 @@ private:
     std::string filename_;
 
 public:
+    FilePackager();
     FilePackager(const std::string& filename);
     Packet get_packet(uint64_t packet_number);
 
