@@ -6,12 +6,13 @@
 
 ServerSession::ServerSession() : socket_{}, server_address_{}, file_packager_{}, current_client_address_{} {}
 
-void ServerSession::start_server(uint16_t port) {
+int ServerSession::start_server(uint16_t port) {
     server_address_ = SocketAddress::any(port);
     socket_.bind_socket(server_address_);
+    return 0;
 }
 
-void ServerSession::accept_connection() {
+int ServerSession::accept_connection() {
     SocketAddress client_address_{};
     std::vector<std::byte> buffer(1024);
     Packet synack(MessageType::SYNACK);
@@ -20,7 +21,7 @@ void ServerSession::accept_connection() {
     Packet syn = Packet::parse(buffer, received);
     if (syn.get_header().type_ != MessageType::SYN) {
         std::cout << "Recieved non SYN from " << client_address_.get_ip() << std::endl;
-        return;
+        return 1;
     }
 
     buffer = std::vector<std::byte>(1024);
@@ -30,11 +31,11 @@ void ServerSession::accept_connection() {
     Packet ack = Packet::parse(buffer, response);
     if (ack.get_header().type_ != MessageType::ACK) {
         std::cout << client_address_.get_ip() << " failed to connect" << std::endl;
-        return;
+        return 1;
     }
 
     std::cout << "Connected to " << client_address_.get_ip() << std::endl;
     current_client_address_ = client_address_;
-    
+    return 0;
 }
 

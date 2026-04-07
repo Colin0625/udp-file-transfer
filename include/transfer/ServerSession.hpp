@@ -11,7 +11,7 @@ private:
 
 public:
     ServerSession();
-    void start_server(uint16_t port);
-    void accept_connection();
+    int start_server(uint16_t port);
+    int accept_connection();
 
 };
