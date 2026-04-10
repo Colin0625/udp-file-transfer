@@ -1,9 +1,10 @@
 #pragma once
 
-#include "net/SocketAddress.hpp"
 #include <span>
 #include <sys/types.h>
 #include <cstddef>
+
+#include "net/SocketAddress.hpp"
 
 class UdpSocket {
 private:

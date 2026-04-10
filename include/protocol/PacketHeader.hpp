@@ -1,7 +1,8 @@
 #pragma once
 
-#include "protocol/MessageType.hpp"
 #include <cstdint>
+
+#include "protocol/MessageType.hpp"
 
 struct PacketHeader {
     MessageType type_;

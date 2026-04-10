@@ -1,7 +1,8 @@
-#include "net/SocketAddress.hpp"
 #include <string.h>
 #include <errno.h>
 #include <stdexcept>
+
+#include "net/SocketAddress.hpp"
 
 
 SocketAddress::SocketAddress() : address_{} {

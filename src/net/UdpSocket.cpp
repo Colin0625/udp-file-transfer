@@ -1,9 +1,10 @@
-#include "net/UdpSocket.hpp"
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <string.h>
 #include <errno.h>
 #include <stdexcept>
+
+#include "net/UdpSocket.hpp"
 
 UdpSocket::UdpSocket() {
     socket_fd_ = socket(AF_INET, SOCK_DGRAM, 0);

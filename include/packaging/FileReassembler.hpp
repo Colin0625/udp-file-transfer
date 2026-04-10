@@ -1,9 +1,9 @@
-#include "protocol/Packet.hpp"
-#include "protocol/PacketHeader.hpp"
-#include "protocol/MessageType.hpp"
 #include <string>
 #include <fstream>
 
+#include "protocol/Packet.hpp"
+#include "protocol/PacketHeader.hpp"
+#include "protocol/MessageType.hpp"
 
 
 class FileReassembler {

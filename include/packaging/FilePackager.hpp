@@ -1,9 +1,10 @@
-#include "protocol/PacketHeader.hpp"
-#include "protocol/MessageType.hpp"
-#include "protocol/Packet.hpp"
 #include <string>
 #include <fstream>
 #include <vector>
+
+#include "protocol/PacketHeader.hpp"
+#include "protocol/MessageType.hpp"
+#include "protocol/Packet.hpp"
 
 class FilePackager {
 private:

@@ -1,11 +1,12 @@
 #pragma once
 
-#include "protocol/PacketHeader.hpp"
-#include "protocol/MessageType.hpp"
 #include <vector>
 #include <cstddef>
 #include <span>
 #include <sys/types.h>
+
+#include "protocol/PacketHeader.hpp"
+#include "protocol/MessageType.hpp"
 
 class Packet {
 private:

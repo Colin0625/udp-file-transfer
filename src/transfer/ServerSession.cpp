@@ -1,7 +1,8 @@
-#include "transfer/ServerSession.hpp"
 #include "net/UdpSocket.hpp"
 #include <cstddef>
 #include <iostream>
+
+#include "transfer/ServerSession.hpp"
 
 
 ServerSession::ServerSession() : socket_{}, server_address_{}, file_packager_{}, current_client_address_{} {}

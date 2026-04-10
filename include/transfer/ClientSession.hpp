@@ -1,6 +1,7 @@
+#include <string>
+
 #include "net/UdpSocket.hpp"
 #include "packaging/FileReassembler.hpp"
-#include <string>
 
 class ClientSession {
 private:

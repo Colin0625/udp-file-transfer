@@ -1,7 +1,8 @@
-#include "packaging/FilePackager.hpp"
 #include <string>
 #include <fstream>
 #include <cstddef>
+
+#include "packaging/FilePackager.hpp"
 
 
 FilePackager::FilePackager() : file_{}, file_size_bytes_{}, number_of_packets_{}, filename_{} {}

@@ -1,9 +1,10 @@
-#include "transfer/ClientSession.hpp"
 #include <string>
 #include <iostream>
 #include <vector>
 #include <cstddef>
 #include <thread>
+
+#include "transfer/ClientSession.hpp"
 
 ClientSession::ClientSession()
  : socket_{}, server_address_{}, file_reassembler_{}

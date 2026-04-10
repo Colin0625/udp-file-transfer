@@ -1,9 +1,10 @@
-#include "protocol/Packet.hpp"
-#include "protocol/PacketHeader.hpp"
-#include "protocol/MessageType.hpp"
 #include <stdexcept>
 #include <arpa/inet.h>
 #include <iostream>
+
+#include "protocol/Packet.hpp"
+#include "protocol/PacketHeader.hpp"
+#include "protocol/MessageType.hpp"
 
 
 Packet::Packet(MessageType type, uint32_t sequence_number, std::span<const std::byte> payload)
