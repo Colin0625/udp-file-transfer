@@ -36,3 +36,7 @@ ssize_t UdpSocket::receive_from(std::span<std::byte> buffer, SocketAddress& addr
     }
     return n;
 }
+
+const int UdpSocket::get_socket_fd() const {
+    return socket_fd_;
+}

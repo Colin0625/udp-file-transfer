@@ -17,7 +17,7 @@ int main() {
 
     std::vector<std::byte> vec = {std::byte(0xfe), std::byte(0xef)};
 
-    Packet p(MessageType::ERROR, vec);
+    Packet p(MessageType::ERROR, server_addr, vec);
 
     std::cout << "Press enter to send data to server" << std::flush;
     std::cin.get();

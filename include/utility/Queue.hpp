@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <optional>
+#include <mutex>
+
 
 template <typename T>
 class Queue {
@@ -12,54 +14,63 @@ private:
         Node(T v, Node* n) : value(v), next(n) {}
     };
 
-    Node* head;
-    Node* tail;
-    size_t length;
+    Node* head_;
+    Node* tail_;
+    size_t length_;
+    mutable std::mutex queue_mtx_;
+
+    bool prelocked_empty() const {
+        return length_ == 0;
+    }
 
 public:
-    Queue() : head(nullptr), tail(nullptr), length{} {}
+    Queue() : head_(nullptr), tail_(nullptr), length_{} {}
 
     bool empty() const {
-        return length == 0;
+        std::unique_lock<std::mutex> qlock(queue_mtx_);
+        return length_ == 0;
     }
 
     void enqueue(T value) {
+        std::unique_lock<std::mutex> qlock(queue_mtx_);
         Node* n = new Node(value, nullptr);
-        if (tail != nullptr) {
-            tail->next = n;
+        if (tail_ != nullptr) {
+            tail_->next = n;
         }
-        tail = n;
-        if (head == nullptr) {
-            head = n;
+        tail_ = n;
+        if (head_ == nullptr) {
+            head_ = n;
         }
-        length++;
+        length_++;
     }
     
     T* dequeue() {
-        if (this->empty()) {
+        std::unique_lock<std::mutex> qlock(queue_mtx_);
+        if (this->prelocked_empty()) {
             return nullptr;
         }
-        Node* old = head;
+        Node* old = head_;
         T val = old->value;
-        head = old->next;
-        if (head == nullptr) {
-            tail = nullptr;
+        head_ = old->next;
+        if (head_ == nullptr) {
+            tail_ = nullptr;
         }
-        delete old;
-        length--;
-        return val;
+        length_--;
+        return &(old->value);
     }
 
-    const size_t get_length() const {
-        return this->length;
+    size_t get_length() const {
+        std::unique_lock<std::mutex> qlock(queue_mtx_);
+        return this->length_;
     }
 
     void print() const {
-        if (this->empty()) {
+        std::unique_lock<std::mutex> qlock(queue_mtx_);
+        if (this->prelocked_empty()) {
             std::cout << "Queue is empty" << std::endl;
             return;
         }
-        Node* current = head;
+        Node* current = head_;
         while (current != nullptr) {
             std::cout << current->value << " ";
             current = current->next;

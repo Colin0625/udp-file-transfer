@@ -15,4 +15,5 @@ public:
     void bind_socket(const SocketAddress& addr);
     ssize_t send_to(std::span<const std::byte> buffer, const SocketAddress& addr);
     ssize_t receive_from(std::span<std::byte> buffer, SocketAddress& addr);
+    const int get_socket_fd() const;
 };
