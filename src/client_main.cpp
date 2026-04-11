@@ -10,11 +10,22 @@
 #include "transfer/ClientSession.hpp"
 
 int main() {
-    ClientSession client{};
+    UdpSocket socket{};
 
-    client.connect_to_server(5000, "100.83.112.113");
-    
-    
+
+    SocketAddress server_addr = SocketAddress::localhost(5000);
+
+    std::vector<std::byte> vec = {std::byte(0xfe), std::byte(0xef)};
+
+    Packet p(MessageType::ERROR, vec);
+
+    std::cout << "Press enter to send data to server" << std::flush;
+    std::cin.get();
+
+    ssize_t sent = socket.send_to(p.serialize(), server_addr);
+    std::cout << "Sent " << sent << " bytes to the server" << std::endl;
+
+
 
     return 0;
 }

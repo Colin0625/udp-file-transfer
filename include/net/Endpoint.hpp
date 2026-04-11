@@ -7,11 +7,14 @@
 
 class Endpoint {
 private:
+    UdpSocket socket_;
+    
 
 
 
 public:
-
+    Endpoint();
+    
 
 
 };

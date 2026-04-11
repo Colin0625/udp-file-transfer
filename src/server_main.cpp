@@ -8,10 +8,24 @@
 #include "transfer/ServerSession.hpp"
 
 int main() {
-    ServerSession server{};
+    UdpSocket sock{};
+    SocketAddress addr = SocketAddress::any(5000);
 
-    server.start_server(5000);
-    server.accept_connection();
+    sock.bind_socket(addr);
+
+
+    std::vector<std::byte> vec(100);
+
+
+    std::cout << "Press enter to accept incoming data." << std::flush;
+    std::cin.get();
+
+    SocketAddress sender_addr{};
+
+    ssize_t n = sock.receive_from(vec, sender_addr);
+    std::cout << "received " << n << " bytes from " << sender_addr.get_ip() << std::endl;
+
+
 
     return 0;
 }
