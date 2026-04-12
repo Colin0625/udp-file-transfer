@@ -1,4 +1,5 @@
 #include <atomic>
+#include <thread>
 
 #include "net/SocketAddress.hpp"
 #include "net/UdpSocket.hpp"
@@ -12,16 +13,17 @@ private:
     UdpSocket socket_;
     Queue<Packet> queue_;
     std::atomic<bool> running_;
+    std::thread thread_;
+    SocketAddress server_address_;
 
 
-
+    void reception_loop();
 public:
     Endpoint();
     void bind_endpoint(const SocketAddress& addr);
-    void packet_receiver();
     ssize_t send_packet(const Packet& packet, const SocketAddress& addr);
-    int close_receiver();
-    Queue<Packet>* get();
-    
+    void start_receiver();
+    int stop_receiver();
+    Packet* get_front_packet();
 
 };
