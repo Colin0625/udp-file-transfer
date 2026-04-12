@@ -10,6 +10,18 @@
 #include "transfer/ServerSession.hpp"
 
 int main() {
+    ServerSession server{};
+
+    server.bind_server(5000);
+    server.start();
+    
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    Packet* p = server.front();
+    if (p != nullptr) {
+        p->print();
+    }
+    server.stop();
 
     return 0;
 }

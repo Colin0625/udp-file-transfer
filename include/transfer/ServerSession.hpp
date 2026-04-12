@@ -9,10 +9,10 @@ private:
     Endpoint endpoint_;
     SocketAddress server_address_;
 
-
-
 public:
     ServerSession();
     void bind_server(int port);
-
+    void start();
+    void stop();
+    Packet* front();
 };

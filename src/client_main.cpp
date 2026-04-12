@@ -10,6 +10,12 @@
 #include "transfer/ClientSession.hpp"
 
 int main() {
+    ClientSession client{};
+    SocketAddress server_addr = SocketAddress::localhost(5000);
+    Packet p(MessageType::SYN);
+
+    client.send(p, server_addr);
+
 
     return 0;
 }
