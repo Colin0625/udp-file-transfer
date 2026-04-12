@@ -18,18 +18,20 @@ FilePackager.o: src/packaging/FilePackager.cpp include/packaging/FilePackager.hp
 FileReassembler.o: src/packaging/FileReassembler.cpp include/packaging/FileReassembler.hpp Packet.o include/protocol/MessageType.hpp include/protocol/PacketHeader.hpp FilePackager.o
 	$(CXX) $(FLAGS) -c src/packaging/FileReassembler.cpp -o FileReassembler.o
 
+Endpoint.o: include/transfer/Endpoint.hpp SocketAddress.o UdpSocket.o Packet.o include/utility/Queue.hpp include/protocol/PacketHeader.hpp
+	$(CXX) $(FLAGS) -c src/transfer/Endpoint.cpp
+
 ServerSession.o: UdpSocket.o FilePackager.o include/transfer/ServerSession.hpp
 	$(CXX) $(FLAGS) -c src/transfer/ServerSession.cpp -o ServerSession.o
 
 ClientSession.o: UdpSocket.o FileReassembler.o include/transfer/ServerSession.hpp
 	$(CXX) $(FLAGS) -c src/transfer/ClientSession.cpp -o ClientSession.o
 
+server: SocketAddress.o UdpSocket.o Packet.o FilePackager.o FileReassembler.o Endpoint.o ServerSession.o src/server_main.cpp
+	$(CXX) $(FLAGS) -g SocketAddress.o UdpSocket.o Packet.o FilePackager.o FileReassembler.o Endpoint.o ServerSession.o src/server_main.cpp -o server.out
 
-server: SocketAddress.o UdpSocket.o Packet.o FilePackager.o FileReassembler.o ServerSession.o src/server_main.cpp
-	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o Packet.o FilePackager.o FileReassembler.o ServerSession.o src/server_main.cpp -o server.out
-
-client: SocketAddress.o UdpSocket.o Packet.o FilePackager.o FileReassembler.o ClientSession.o src/client_main.cpp
-	$(CXX) $(FLAGS) SocketAddress.o UdpSocket.o Packet.o FilePackager.o FileReassembler.o ClientSession.o src/client_main.cpp -o client.out
+client: SocketAddress.o UdpSocket.o Packet.o FilePackager.o FileReassembler.o Endpoint.o ClientSession.o src/client_main.cpp
+	$(CXX) $(FLAGS) -g SocketAddress.o UdpSocket.o Packet.o FilePackager.o FileReassembler.o Endpoint.o ClientSession.o src/client_main.cpp -o client.out
 
 test: FilePackager.o Packet.o FileReassembler.o src/FilePackagerTester.cpp
 	$(CXX) $(FLAGS) Packet.o FilePackager.o FileReassembler.o src/FilePackagerTester.cpp -o test.out

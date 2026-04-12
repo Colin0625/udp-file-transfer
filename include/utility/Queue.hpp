@@ -33,6 +33,7 @@ public:
 
     void enqueue(T value) {
         std::unique_lock<std::mutex> qlock(queue_mtx_);
+        std::cout << "enqueuing new value" << std::endl;
         Node* n = new Node(value, nullptr);
         if (tail_ != nullptr) {
             tail_->next = n;

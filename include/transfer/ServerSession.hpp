@@ -15,7 +15,7 @@ private:
 public:
     ServerSession();
     void bind_server(int port);
-    std::thread start_listening();
+    void start_listening();
     int stop_listening();
-
+    Queue<Packet>* get_queue();
 };

@@ -16,7 +16,17 @@ void Endpoint::packet_receiver() {
     while (running_) {
         std::vector<std::byte> buffer(Packet::max_packet_size);
         SocketAddress addr{};
-        ssize_t received = socket_.receive_from(buffer, addr);
+        ssize_t received{};
+        try {
+            received = socket_.receive_from(buffer, addr);
+            
+        }
+        catch (const std::exception& e) {
+            if (!running_) {
+                return;
+            }
+            throw;
+        }
         Packet p = Packet::parse(buffer, received, addr);
         queue_.enqueue(p);
     }
@@ -32,4 +42,8 @@ int Endpoint::close_receiver() {
     }
     running_ = false;
     return close(socket_.get_socket_fd());
+}
+
+Queue<Packet>* Endpoint::get() {
+    return &queue_;
 }

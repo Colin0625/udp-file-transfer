@@ -1,5 +1,4 @@
-
-
+#include <atomic>
 
 #include "net/SocketAddress.hpp"
 #include "net/UdpSocket.hpp"
@@ -12,7 +11,7 @@ class Endpoint {
 private:
     UdpSocket socket_;
     Queue<Packet> queue_;
-    bool running_;
+    std::atomic<bool> running_;
 
 
 
@@ -22,7 +21,7 @@ public:
     void packet_receiver();
     ssize_t send_packet(const Packet& packet, const SocketAddress& addr);
     int close_receiver();
+    Queue<Packet>* get();
     
-
 
 };

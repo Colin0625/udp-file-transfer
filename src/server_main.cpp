@@ -1,6 +1,8 @@
 #include <vector>
 #include <cstddef>
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 #include "net/SocketAddress.hpp"
 #include "net/UdpSocket.hpp"
@@ -8,23 +10,23 @@
 #include "transfer/ServerSession.hpp"
 
 int main() {
-    UdpSocket sock{};
-    SocketAddress addr = SocketAddress::any(5000);
+    ServerSession server{};
+    server.bind_server(5000);
+    Queue<Packet>* q = server.get_queue();
 
-    sock.bind_socket(addr);
+    server.start_listening();
+    std::cout << "started listening" << std::endl;
+    
+    std::cout << "Starting sleep" << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    
+    std::cout << "done sleeping" << std::endl;
 
+    q->dequeue()->print();
+    std::cout << "printed" << std::endl;
 
-    std::vector<std::byte> vec(100);
-
-
-    std::cout << "Press enter to accept incoming data." << std::flush;
-    std::cin.get();
-
-    SocketAddress sender_addr{};
-
-    ssize_t n = sock.receive_from(vec, sender_addr);
-    std::cout << "received " << n << " bytes from " << sender_addr.get_ip() << std::endl;
-
+    server.stop_listening();
+    std::cout << "stopped listening" << std::endl;
 
 
     return 0;

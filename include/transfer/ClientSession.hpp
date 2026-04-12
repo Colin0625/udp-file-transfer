@@ -2,6 +2,7 @@
 
 #include "transfer/Endpoint.hpp"
 #include "protocol/Packet.hpp"
+#include "utility/Queue.hpp"
 
 
 class ClientSession {
@@ -14,7 +15,8 @@ private:
 
 public:
     ClientSession();
-    std::thread start_listening();
+    void start_listening();
     int stop_listening();
-
+    Queue<Packet>* get_queue();
+    ssize_t send(Packet p, SocketAddress addr);
 };
