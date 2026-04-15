@@ -18,6 +18,6 @@ ssize_t ClientSession::send(Packet p, SocketAddress addr) {
     return endpoint_.send_packet(p, addr);
 }
 
-Packet* ClientSession::front() {
+Packet ClientSession::front() {
     return endpoint_.get_front_packet();
 }

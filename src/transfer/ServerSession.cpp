@@ -17,6 +17,6 @@ void ServerSession::stop() {
     endpoint_.stop_receiver();
 }
 
-Packet* ServerSession::front() {
+Packet ServerSession::front() {
     return endpoint_.get_front_packet();
 }

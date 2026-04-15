@@ -14,5 +14,5 @@ public:
     void bind_server(int port);
     void start();
     void stop();
-    Packet* front();
+    Packet front();
 };

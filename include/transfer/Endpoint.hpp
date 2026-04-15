@@ -24,6 +24,6 @@ public:
     ssize_t send_packet(const Packet& packet, const SocketAddress& addr);
     void start_receiver();
     int stop_receiver();
-    Packet* get_front_packet();
+    Packet get_front_packet();
 
 };

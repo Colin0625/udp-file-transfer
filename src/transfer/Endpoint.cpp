@@ -51,9 +51,10 @@ int Endpoint::stop_receiver() {
     if (thread_.joinable()) {
         thread_.join();
     }
+    queue_.stop_queue();
     return close(socket_.get_socket_fd());
 }
 
-Packet* Endpoint::get_front_packet() {
+Packet Endpoint::get_front_packet() {
     return queue_.dequeue();
 }

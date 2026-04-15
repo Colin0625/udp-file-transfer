@@ -12,9 +12,17 @@
 int main() {
     ClientSession client{};
     SocketAddress server_addr = SocketAddress::localhost(5000);
-    Packet p(MessageType::SYN);
+    
 
-    client.send(p, server_addr);
+    int s;
+    std::cout << "Press enter to send a packet >>> ";
+    std::cin >> s;
+    for (int i = 0; i < 5; i++) {
+        Packet p(static_cast<MessageType>(s));
+        std::cout << "Sending packet" << std::endl;
+        ssize_t sent = client.send(p, server_addr);
+        std::cout << "Sent " << sent << " bytes to server." << std::endl;
+    }
 
 
     return 0;

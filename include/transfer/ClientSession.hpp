@@ -15,5 +15,5 @@ public:
     void start();
     void stop();
     ssize_t send(Packet p, SocketAddress addr);
-    Packet* front();
+    Packet front();
 };

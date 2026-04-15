@@ -15,13 +15,15 @@ int main() {
     server.bind_server(5000);
     server.start();
     
-    std::this_thread::sleep_for(std::chrono::seconds(2));
-
-    Packet* p = server.front();
-    if (p != nullptr) {
-        p->print();
+    std::cout << "Starting to listen" << std::endl;
+    while (true) {
+        Packet p = server.front();
+        p.print();
     }
     server.stop();
+
+    
+
 
     return 0;
 }
