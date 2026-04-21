@@ -9,17 +9,24 @@
 #include "protocol/Packet.hpp"
 #include "transfer/ServerSession.hpp"
 
+
+
+void main_loop() {
+    
+}
+
+
+
+
 int main() {
     ServerSession server{};
 
     server.bind_server(5000);
     server.start();
     
-    std::cout << "Starting to listen" << std::endl;
-    while (true) {
-        Packet p = server.front();
-        p.print();
-    }
+    
+
+
     server.stop();
 
     

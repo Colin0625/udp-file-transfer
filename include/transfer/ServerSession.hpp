@@ -2,12 +2,14 @@
 
 #include "transfer/Endpoint.hpp"
 #include "protocol/Packet.hpp"
+#include "transfer/SessionState.hpp"
 
 
 class ServerSession {
 private:
     Endpoint endpoint_;
     SocketAddress server_address_;
+    SessionState state_;
 
 public:
     ServerSession();
@@ -15,4 +17,5 @@ public:
     void start();
     void stop();
     Packet front();
+    void handle_packet();
 };

@@ -4,7 +4,8 @@
 #include "utility/Queue.hpp"
 #include "protocol/Packet.hpp"
 
-ClientSession::ClientSession() : endpoint_{}, server_address_{} {}
+ClientSession::ClientSession()
+ : endpoint_{}, server_address_{}, state_(SessionState::OFF) {}
 
 void ClientSession::start() {
     endpoint_.start_receiver();
@@ -20,4 +21,8 @@ ssize_t ClientSession::send(Packet p, SocketAddress addr) {
 
 Packet ClientSession::front() {
     return endpoint_.get_front_packet();
+}
+
+void ClientSession::handle_packet() {
+    
 }

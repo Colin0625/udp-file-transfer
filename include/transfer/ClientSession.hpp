@@ -3,12 +3,14 @@
 #include "transfer/Endpoint.hpp"
 #include "protocol/Packet.hpp"
 #include "utility/Queue.hpp"
+#include "transfer/SessionState.hpp"
 
 
 class ClientSession {
 private:
     Endpoint endpoint_;
     SocketAddress server_address_;
+    SessionState state_;
 
 public:
     ClientSession();
@@ -16,4 +18,5 @@ public:
     void stop();
     ssize_t send(Packet p, SocketAddress addr);
     Packet front();
+    void handle_packet();
 };

@@ -11,19 +11,11 @@
 
 int main() {
     ClientSession client{};
-    SocketAddress server_addr = SocketAddress::localhost(5000);
-    
-
-    int s;
-    std::cout << "Press enter to send a packet >>> ";
-    std::cin >> s;
-    for (int i = 0; i < 5; i++) {
-        Packet p(static_cast<MessageType>(s));
-        std::cout << "Sending packet" << std::endl;
-        ssize_t sent = client.send(p, server_addr);
-        std::cout << "Sent " << sent << " bytes to server." << std::endl;
-    }
+    // SocketAddress server_addr = SocketAddress::localhost(5000);
+    SocketAddress server_addr(5000, "100.83.112.113");
+    client.start();
 
 
+    client.stop();
     return 0;
 }

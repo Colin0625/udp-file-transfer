@@ -2,7 +2,8 @@
 
 #include "transfer/ServerSession.hpp"
 
-ServerSession::ServerSession() : endpoint_{}, server_address_{} {}
+ServerSession::ServerSession()
+ : endpoint_{}, server_address_{}, state_(SessionState::OFF) {}
 
 void ServerSession::bind_server(int port) {
     SocketAddress addr = SocketAddress::any(port);
@@ -19,4 +20,10 @@ void ServerSession::stop() {
 
 Packet ServerSession::front() {
     return endpoint_.get_front_packet();
+}
+
+void ServerSession::handle_packet() {
+    Packet packet = endpoint_.get_front_packet();
+    MessageType mt = packet.get_header().type_;
+    
 }
