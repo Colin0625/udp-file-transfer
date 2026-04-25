@@ -21,7 +21,7 @@ int main() {
     server.start();
     
     server.manage_packet();
-
+    server.manage_packet();
 
     server.stop();
 
