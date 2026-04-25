@@ -37,7 +37,7 @@ public:
 
     void enqueue(T value) {
         std::lock_guard<std::mutex> qlock(queue_mtx_);
-        std::cout << "QUEUE: enqueuing new value" << std::endl;
+        // std::cout << "QUEUE: enqueuing new value" << std::endl;
         Node* n = new Node(std::move(value), nullptr);
         if (tail_ != nullptr) {
             tail_->next = n;
@@ -52,9 +52,9 @@ public:
     
     T dequeue() {
         std::unique_lock<std::mutex> qlock(queue_mtx_);
-        std::cout << "QUEUE: Blocking for dequeue" << std::endl;
+        // std::cout << "QUEUE: Blocking for dequeue" << std::endl;
         cv_.wait(qlock, [this]{ return !prelocked_empty() || !running_; });
-        std::cout << "QUEUE: Done blocking" << std::endl;
+        // std::cout << "QUEUE: Done blocking" << std::endl;
         // if (this->prelocked_empty()) {
         //     return ;
         // }
@@ -78,7 +78,7 @@ public:
     void print() const {
         std::lock_guard<std::mutex> qlock(queue_mtx_);
         if (this->prelocked_empty()) {
-            std::cout << "QUEUE: Queue is empty" << std::endl;
+            // std::cout << "QUEUE: Queue is empty" << std::endl;
             return;
         }
         Node* current = head_;
