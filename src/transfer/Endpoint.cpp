@@ -35,6 +35,7 @@ void Endpoint::reception_loop() {
 }
 
 ssize_t Endpoint::send_packet(const Packet& packet, const SocketAddress& addr) {
+    std::cout << "sending packet from Endpoint::send_packet" << std::endl;
     return socket_.send_to(packet.serialize(), addr);
 }
 
