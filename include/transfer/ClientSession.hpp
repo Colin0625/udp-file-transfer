@@ -14,6 +14,7 @@ private:
 
 public:
     ClientSession();
+    void set_server_address(const SocketAddress& addr);
     void start();
     void stop();
     ssize_t send(Packet p, SocketAddress addr);

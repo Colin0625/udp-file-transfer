@@ -7,6 +7,11 @@
 ClientSession::ClientSession()
  : endpoint_{}, server_address_{}, state_(SessionState::OFF) {}
 
+
+void ClientSession::set_server_address(const SocketAddress& addr) {
+    server_address_ = addr;
+}
+
 void ClientSession::start() {
     endpoint_.start_receiver();
 }
