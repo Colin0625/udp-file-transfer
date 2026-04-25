@@ -5,11 +5,11 @@
 #include "net/SocketAddress.hpp"
 
 
-SocketAddress::SocketAddress() : address_{} {
+SocketAddress::SocketAddress() : address_{}, ip_address_{} {
 
 }
 
-SocketAddress::SocketAddress(uint16_t port, const std::string& ip_addr) : address_{} {
+SocketAddress::SocketAddress(uint16_t port, const std::string& ip_addr) : address_{}, ip_address_(ip_addr) {
     address_.sin_family = AF_INET;
     address_.sin_port = htons(port);
     int res = inet_pton(AF_INET, ip_addr.c_str(), &address_.sin_addr);
@@ -45,10 +45,6 @@ sockaddr* SocketAddress::data() {
     return reinterpret_cast<sockaddr*>(&address_);
 }
 
-std::string SocketAddress::get_ip() const {
-    char addr_ip[INET_ADDRSTRLEN];
-    if (inet_ntop(AF_INET, &address_.sin_addr, addr_ip, sizeof(addr_ip)) == nullptr) {
-        return {};
-    }
-    return std::string(addr_ip);
+const std::string& SocketAddress::get_ip() const {
+    return ip_address_;
 }

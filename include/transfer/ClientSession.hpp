@@ -18,5 +18,5 @@ public:
     void stop();
     ssize_t send(Packet p, SocketAddress addr);
     Packet front();
-    void handle_packet();
+    void manage_packet();
 };

@@ -8,6 +8,7 @@
 class SocketAddress {
 private:
     sockaddr_in address_;
+    std::string ip_address_;
 
 public:
     SocketAddress();
@@ -17,5 +18,5 @@ public:
     socklen_t size() const;
     const sockaddr* data() const;
     sockaddr* data();
-    std::string get_ip() const;
+    const std::string& get_ip() const;
 };

@@ -23,6 +23,6 @@ Packet ClientSession::front() {
     return endpoint_.get_front_packet();
 }
 
-void ClientSession::handle_packet() {
+void ClientSession::manage_packet() {
     
 }

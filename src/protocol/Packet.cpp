@@ -103,6 +103,14 @@ const PacketHeader& Packet::get_header() const {
     return header_;
 }
 
+const MessageType& Packet::get_message_type() const {
+    return header_.type_;
+}
+
+const std::string& Packet::get_sender_ip() const {
+    return sender_address_.get_ip();
+}
+
 void Packet::print() const {
     std::cout << "Packet contents" << std::endl;
     std::cout << "Packet type: " << static_cast<int>(header_.type_) << std::endl;

@@ -26,6 +26,8 @@ public:
 
     const std::vector<std::byte>& get_payload() const;
     const PacketHeader& get_header() const;
+    const MessageType& get_message_type() const;
+    const std::string& get_sender_ip() const;
     void print() const;
     static const uint16_t max_packet_size = 1024;
 };
