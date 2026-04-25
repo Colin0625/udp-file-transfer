@@ -25,6 +25,7 @@ void Endpoint::reception_loop() {
         int ret = poll(&pfd, 1, 100);
         if (ret > 0 && (pfd.revents & POLLIN)) {
             ssize_t received = socket_.receive_from(buffer, addr);
+            std::cout << "reception loop caught packet from " << addr.get_ip() << std::endl;
             Packet p = Packet::parse(buffer, received, addr);
             queue_.enqueue(p);
         }
