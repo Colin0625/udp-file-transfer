@@ -57,6 +57,7 @@ void ServerSession::handle_off(Packet& packet) {
 
 void ServerSession::handle_idle(Packet& packet) {
     std::cout << "Message received from " << packet.get_sender_ip() << std::endl;
+    packet.print();
 }
 
 void ServerSession::handle_connecting(Packet& packet) {
