@@ -3,6 +3,7 @@
 #include <string.h>
 #include <errno.h>
 #include <stdexcept>
+#include <iostream>
 
 #include "net/UdpSocket.hpp"
 
