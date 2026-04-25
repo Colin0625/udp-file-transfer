@@ -35,6 +35,7 @@ ssize_t UdpSocket::receive_from(std::span<std::byte> buffer, SocketAddress& addr
     if (n < 0) {
         throw std::runtime_error(std::string("receive_from failed: ") + strerror(errno));
     }
+    addr.update_ip();
     return n;
 }
 
