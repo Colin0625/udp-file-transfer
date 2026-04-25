@@ -40,8 +40,8 @@ socklen_t SocketAddress::size() const {
 }
 
 void SocketAddress::update_ip() {
-    std::string ip_addr;
-    const char* res = inet_ntop(AF_INET, &address_.sin_addr, ip_addr.data(), INET_ADDRSTRLEN);
+    char ip_addr[INET_ADDRSTRLEN];
+    const char* res = inet_ntop(AF_INET, &address_.sin_addr, ip_addr, INET_ADDRSTRLEN);
     if (!res) {
         throw std::runtime_error(std::string("SocketAddress IP update failed: ") + strerror(errno));
     }
