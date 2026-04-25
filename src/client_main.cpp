@@ -12,10 +12,10 @@
 int main() {
     ClientSession client{};
     // SocketAddress server_addr = SocketAddress::localhost(5000);
-    SocketAddress server_addr(5000, "100.83.112.113");
+    SocketAddress server_addr(5000, "100.110.209.74");
     client.start();
 
-    Packet p(MessageType::SYN);
+    Packet p(MessageType::SYNACK);
     ssize_t sent = client.send(p, server_addr);
 
     std::cout << "Sent " << sent << " bytes to the server" << std::endl;
