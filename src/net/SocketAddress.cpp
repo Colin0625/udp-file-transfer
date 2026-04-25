@@ -1,6 +1,7 @@
 #include <string.h>
 #include <errno.h>
 #include <stdexcept>
+#include <arpa/inet.h>
 
 #include "net/SocketAddress.hpp"
 
@@ -35,6 +36,15 @@ SocketAddress SocketAddress::localhost(uint16_t port) {
 
 socklen_t SocketAddress::size() const {
     return sizeof(address_);
+}
+
+void SocketAddress::update_ip() {
+    std::string ip_addr;
+    const char* res = inet_ntop(AF_INET, &address_.sin_addr, ip_addr.data(), INET_ADDRSTRLEN);
+    if (!res) {
+        throw std::runtime_error(std::string("SocketAddress IP update failed: ") + strerror(errno));
+    }
+    ip_address_ = ip_addr;
 }
 
 const sockaddr* SocketAddress::data() const {

@@ -16,6 +16,7 @@ public:
     static SocketAddress any(uint16_t port);
     static SocketAddress localhost(uint16_t port);
     socklen_t size() const;
+    void update_ip();
     const sockaddr* data() const;
     sockaddr* data();
     const std::string& get_ip() const;
