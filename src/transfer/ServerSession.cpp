@@ -92,6 +92,7 @@ void ServerSession::handle_connection(Packet& packet) {
         const std::vector<std::byte>& payload = packet.get_payload();
         std::cout << "Payload contents: ";
         std::cout << "size: " << payload.size() << " > ";
+        packet.print();
         for (const std::byte& b : payload) {
             std::cout << static_cast<char>(b);
         }
