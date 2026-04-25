@@ -88,7 +88,16 @@ void ServerSession::handle_connecting(Packet& packet) {
 }
 
 void ServerSession::handle_connection(Packet& packet) {
-
+    if (packet.get_message_type() == MessageType::GET) {
+        const std::vector<std::byte>& payload = packet.get_payload();
+        std::cout << "Payload contents: ";
+        std::cout << "size: " << payload.size() << " > ";
+        for (const std::byte& b : payload) {
+            std::cout << static_cast<char>(b);
+        }
+        std::cout << std::endl;
+        return;
+    }
 }
 
 void ServerSession::handle_metatransfer(Packet& packet) {

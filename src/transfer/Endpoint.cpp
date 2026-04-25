@@ -25,8 +25,13 @@ void Endpoint::reception_loop() {
         int ret = poll(&pfd, 1, 100);
         if (ret > 0 && (pfd.revents & POLLIN)) {
             ssize_t received = socket_.receive_from(buffer, addr);
-            // std::cout << "reception loop caught packet from " << addr.get_ip() << std::endl;
+            std::cout << "reception loop caught packet from " << addr.get_ip() << " of size " << received << std::endl;
             Packet p = Packet::parse(buffer, received, addr);
+            std::cout << "reception loop packet contents: ";
+            for (std::byte b : p.get_payload()) {
+                std::cout << static_cast<char>(b);
+            }
+            std::cout << std::endl;
             queue_.enqueue(p);
         }
         else if (ret < 0) {
@@ -36,7 +41,7 @@ void Endpoint::reception_loop() {
 }
 
 ssize_t Endpoint::send_packet(const Packet& packet, const SocketAddress& addr) {
-    return socket_.send_to(packet.serialize(), addr);
+    return socket_.send_to(packet.serialize(), addr); 
 }
 
 void Endpoint::start_receiver() {

@@ -27,6 +27,7 @@ Packet Packet::parse(std::span<const std::byte> bytes, ssize_t len, SocketAddres
     }
 
     std::span<const std::byte> msg = bytes.subspan(0, len);
+    std::cout << "size of msg: " << msg.size() << std::endl;
 
     MessageType type = static_cast<MessageType>(msg[0]);
 
@@ -45,7 +46,10 @@ Packet Packet::parse(std::span<const std::byte> bytes, ssize_t len, SocketAddres
         (static_cast<uint32_t>(std::to_integer<uint8_t>(msg[8])) << 16) |
         (static_cast<uint32_t>(std::to_integer<uint8_t>(msg[9])) << 8)  |
          static_cast<uint32_t>(std::to_integer<uint8_t>(msg[10]));
-
+    for (ssize_t i = 0; i < msg.size(); i++) {
+        std::cout << static_cast<char>(msg[i]);
+    }
+    std::cout << std::endl;
     return Packet(
         PacketHeader(type, payload_size, sequence_number, checksum),
         addr,
