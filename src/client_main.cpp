@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <vector>
 #include <iostream>
+#include <filesystem>
 
 #include "net/SocketAddress.hpp"
 #include "net/UdpSocket.hpp"
@@ -17,7 +18,7 @@ int main() {
     client.start();
 
     client.connect_to_server();
-
+    client.request_file(std::filesystem::path("test-files/cpp.png"));
 
     client.stop();
     return 0;
