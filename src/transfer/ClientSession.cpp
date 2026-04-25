@@ -105,7 +105,7 @@ void ClientSession::request_file(const std::filesystem::path& file_path) {
         std::cout << "Not connected to server, cannot request" << std::endl;
         return;
     }
-    std::string file_string = std::filesystem::absolute(file_path).string();
+    std::string file_string = file_path.string();
     Packet p(MessageType::GET, server_address_, std::span<std::byte>(reinterpret_cast<std::byte*>(file_string.data()), file_string.size()));
     ssize_t sent = endpoint_.send_packet(p, server_address_);
     std::cout << "Sent " << sent << " bytes to server requesting " << file_string << std::endl;
