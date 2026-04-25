@@ -60,3 +60,7 @@ sockaddr* SocketAddress::data() {
 const std::string& SocketAddress::get_ip() const {
     return ip_address_;
 }
+
+const sockaddr_in& SocketAddress::get_sockaddr() const {
+    return address_;
+}

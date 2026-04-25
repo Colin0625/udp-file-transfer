@@ -23,6 +23,7 @@ public:
     void handle_idle(Packet& packet);
     void handle_connecting(Packet& packet);
     void handle_connection(Packet& packet);
+    void handle_metatransfer(Packet& packet);
     void handle_transferring(Packet& packet);
     void handle_closing(Packet& packet);
 };

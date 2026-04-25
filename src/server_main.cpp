@@ -3,6 +3,8 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <csignal>
+#include <atomic>
 
 #include "net/SocketAddress.hpp"
 #include "net/UdpSocket.hpp"
@@ -20,8 +22,9 @@ int main() {
     server.bind_server(5000);
     server.start();
     
-    server.manage_packet();
-    server.manage_packet();
+    while (true) {
+        server.manage_packet();
+    }
 
     server.stop();
 

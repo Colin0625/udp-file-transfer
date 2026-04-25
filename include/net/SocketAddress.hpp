@@ -20,4 +20,5 @@ public:
     const sockaddr* data() const;
     sockaddr* data();
     const std::string& get_ip() const;
+    const sockaddr_in& get_sockaddr() const;
 };

@@ -47,7 +47,7 @@ void ServerSession::manage_packet() {
             handle_closing(packet);
             break;
         default:
-        break;
+            break;
     }
 }
 
@@ -64,7 +64,7 @@ void ServerSession::handle_idle(Packet& packet) {
         std::cout << "Send " << sent << " bytes as connection acceptance to " << packet.get_sender_ip() << std::endl;
     }
     else if (packet.get_message_type() == MessageType::CLOSE) {
-
+        
     }
     else {
         std::cout << "Received invalid packet for idle server from " << packet.get_sender_ip() << std::endl;
@@ -88,6 +88,10 @@ void ServerSession::handle_connecting(Packet& packet) {
 }
 
 void ServerSession::handle_connection(Packet& packet) {
+
+}
+
+void ServerSession::handle_metatransfer(Packet& packet) {
 
 }
 

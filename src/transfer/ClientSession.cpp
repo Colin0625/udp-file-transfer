@@ -47,6 +47,9 @@ void ClientSession::manage_packet() {
         case SessionState::TRANSFERRING:
             handle_transferring(packet);
             break;
+        case SessionState::METATRANSFER:
+            handle_metatransfer(packet);
+            break;
         case SessionState::CLOSING:
             handle_closing(packet);
             break;
@@ -78,6 +81,10 @@ void ClientSession::handle_connection(Packet& packet) {
 
 }
 
+void ClientSession::handle_metatransfer(Packet& packet) {
+
+}
+
 void ClientSession::handle_transferring(Packet& packet) {
 
 }
@@ -86,10 +93,20 @@ void ClientSession::handle_closing(Packet& packet) {
 
 }
 
-
 void ClientSession::connect_to_server() {
     ssize_t syn_sent = endpoint_.send_packet(Packet(MessageType::SYN), server_address_);
     std::cout << "Sent " << syn_sent << " bytes to server as connection request" << std::endl;
     state_ = SessionState::CONNECTING;
     manage_packet();
+}
+
+void ClientSession::request_file(const std::filesystem::path& file_path) {
+    if (state_ != SessionState::CONNECTED) {
+        std::cout << "Not connected to server, cannot request" << std::endl;
+        return;
+    }
+    std::string file_string = file_path.filename();
+    Packet p(MessageType::GET, server_address_, std::span<std::byte>(reinterpret_cast<std::byte*>(file_string.data()), file_string.size()));
+    ssize_t sent = endpoint_.send_packet(p, server_address_);
+    std::cout << "Sent " << sent << " bytes to server requesting " << file_string << std::endl;
 }

@@ -7,6 +7,7 @@ enum class SessionState : uint8_t {
     IDLE            = 1,
     CONNECTING      = 2,
     CONNECTED       = 3,
-    TRANSFERRING    = 4,
-    CLOSING         = 5
+    METATRANSFER    = 4,
+    TRANSFERRING    = 5,
+    CLOSING         = 6
 };
