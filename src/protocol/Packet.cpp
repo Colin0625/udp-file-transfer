@@ -111,6 +111,10 @@ const std::string& Packet::get_sender_ip() const {
     return sender_address_.get_ip();
 }
 
+const SocketAddress& Packet::get_sender_addr() const {
+    return sender_address_;
+}
+
 void Packet::print() const {
     std::cout << "Packet contents" << std::endl;
     std::cout << "Packet type: " << static_cast<int>(header_.type_) << std::endl;

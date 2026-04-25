@@ -56,12 +56,35 @@ void ServerSession::handle_off(Packet& packet) {
 }
 
 void ServerSession::handle_idle(Packet& packet) {
-    std::cout << "Message received from " << packet.get_sender_ip() << std::endl;
-    packet.print();
+    if (packet.get_message_type() == MessageType::SYN) {
+        std::cout << "Received connection request from " << packet.get_sender_ip() << std::endl;
+        state_ = SessionState::CONNECTING;
+        current_client_address_ = packet.get_sender_addr();
+        ssize_t sent = endpoint_.send_packet(Packet(MessageType::SYNACK), current_client_address_);
+        std::cout << "Send " << sent << " bytes as connection acceptance to " << packet.get_sender_ip() << std::endl;
+    }
+    else if (packet.get_message_type() == MessageType::CLOSE) {
+
+    }
+    else {
+        std::cout << "Received invalid packet for idle server from " << packet.get_sender_ip() << std::endl;
+    }
 }
 
 void ServerSession::handle_connecting(Packet& packet) {
-
+    if (packet.get_message_type() == MessageType::ACK) {
+        std::cout << packet.get_sender_ip() << " completed connection, now connected to client" << std::endl;
+        state_ = SessionState::CONNECTED;
+    }
+    else {
+        if (packet.get_sender_ip() != current_client_address_.get_ip()) {
+            std::cout << "Received message from " << packet.get_sender_ip() << ", disregarding" << std::endl;
+            return;
+        }
+        std::cout << packet.get_sender_ip() << " did not complete connection, resetting state" << std::endl;
+        current_client_address_ = SocketAddress{};
+        state_ = SessionState::IDLE;
+    }
 }
 
 void ServerSession::handle_connection(Packet& packet) {

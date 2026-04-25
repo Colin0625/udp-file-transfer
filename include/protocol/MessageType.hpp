@@ -12,5 +12,7 @@ enum class MessageType : uint8_t {
     COMPLETE    = 6,
     RETRANSMIT  = 7,
     ERROR       = 8,
+    CLOSE       = 9,
+    CLOSEACK    = 10,
 
 };
