@@ -65,6 +65,7 @@ void ClientSession::handle_idle(Packet& packet) {
 }
 
 void ClientSession::handle_connecting(Packet& packet) {
+    std::cout << "received packet in connecting state" << std::endl;
     if (packet.get_message_type() == MessageType::SYNACK && packet.get_sender_ip() == server_address_.get_ip()) {
         std::cout << "Received connection acceptance from " << server_address_.get_ip() << " (server)" << std::endl;
         ssize_t synack_sent = endpoint_.send_packet(Packet(MessageType::ACK), server_address_);
