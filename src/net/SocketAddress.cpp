@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <stdexcept>
 #include <arpa/inet.h>
+#include <iostream>
 
 #include "net/SocketAddress.hpp"
 
@@ -44,6 +45,7 @@ void SocketAddress::update_ip() {
     if (!res) {
         throw std::runtime_error(std::string("SocketAddress IP update failed: ") + strerror(errno));
     }
+    std::cout << "updated ip address to " << ip_addr << std::endl;
     ip_address_ = ip_addr;
 }
 
