@@ -15,6 +15,11 @@ int main() {
     SocketAddress server_addr(5000, "100.83.112.113");
     client.start();
 
+    Packet p(MessageType::SYN);
+    ssize_t sent = client.send(p, server_addr);
+
+    std::cout << "Sent " << sent << " bytes to the server" << std::endl;
+
 
     client.stop();
     return 0;

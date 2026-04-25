@@ -11,10 +11,6 @@
 
 
 
-void main_loop() {
-    
-}
-
 
 
 
@@ -24,7 +20,7 @@ int main() {
     server.bind_server(5000);
     server.start();
     
-    
+    server.manage_packet();
 
 
     server.stop();
