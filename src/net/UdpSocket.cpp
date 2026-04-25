@@ -21,7 +21,6 @@ void UdpSocket::bind_socket(const SocketAddress& addr) {
 }
 
 ssize_t UdpSocket::send_to(std::span<const std::byte> buffer, const SocketAddress& addr) {
-    std::cout << "sending packet from UdpSocket::send_to" << std::endl;
     const std::byte* payload = reinterpret_cast<const std::byte*>(buffer.data());
     ssize_t sent = sendto(socket_fd_, payload, buffer.size(), 0, addr.data(), addr.size());
     if (sent < 0) {
