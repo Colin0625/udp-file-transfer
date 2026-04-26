@@ -21,6 +21,12 @@ Packet::Packet(MessageType type)
  : header_(type), sender_address_{}, payload_{}
 {}
 
+Packet::Packet(MessageType type, const SocketAddress& addr, std::span<const std::byte> payload)
+ : header_(type, payload.size(), 0), sender_address_(addr), payload_(payload_)
+{
+    header_.checksum_ = checksum(header_, payload_);
+}
+
 Packet Packet::parse(std::span<const std::byte> bytes, ssize_t len, SocketAddress addr) {
     if (len < 0) {
         throw std::runtime_error("Failed to receive bytes");

@@ -20,6 +20,7 @@ public:
     Packet(MessageType type, uint32_t sequence_number, std::span<const std::byte> payload);
     Packet(const PacketHeader& header, const SocketAddress& addr, std::span<const std::byte> payload);
     Packet(MessageType type);
+    Packet(MessageType type, const SocketAddress& addr, std::span<const std::byte> payload);
     static Packet parse(std::span<const std::byte> bytes, ssize_t len, SocketAddress addr);
     std::vector<std::byte> serialize() const;
 

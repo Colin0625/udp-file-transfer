@@ -43,6 +43,9 @@ void ServerSession::manage_packet() {
         case SessionState::TRANSFERRING:
             handle_transferring(packet);
             break;
+        case SessionState::METATRANSFER:
+            handle_metatransfer(packet);
+            break;
         case SessionState::CLOSING:
             handle_closing(packet);
             break;
