@@ -13,16 +13,22 @@ Packet::Packet(MessageType type, uint32_t sequence_number, std::span<const std::
     header_.checksum_ = checksum(header_, payload_);
 }
 
-Packet::Packet(const PacketHeader& header, const SocketAddress& addr, std::span<const std::byte> payload)
- : header_(header), sender_address_(addr), payload_(payload.begin(), payload.end()) 
-{}
+// Packet::Packet(const PacketHeader& header, const SocketAddress& addr, std::span<const std::byte> payload)
+//  : header_(header), sender_address_(addr), payload_(payload.begin(), payload.end()) 
+// {}
 
 Packet::Packet(MessageType type)
  : header_(type), sender_address_{}, payload_{}
 {}
 
 Packet::Packet(MessageType type, const SocketAddress& addr, std::span<const std::byte> payload)
- : header_(type, payload.size(), 0), sender_address_(addr), payload_(payload_)
+ : header_(type, payload.size(), 0), sender_address_(addr), payload_(payload.begin(), payload.end())
+{
+    header_.checksum_ = checksum(header_, payload_);
+}
+
+Packet::Packet(MessageType type, uint32_t sequence_number, uint32_t csum, const SocketAddress& addr, std::span<const std::byte> payload) 
+ : header_(type, payload.size(), sequence_number, csum), sender_address_(addr), payload_(payload.begin(), payload.end())
 {
     header_.checksum_ = checksum(header_, payload_);
 }
@@ -57,7 +63,9 @@ Packet Packet::parse(std::span<const std::byte> bytes, ssize_t len, SocketAddres
     }
     std::cout << std::endl;
     return Packet(
-        PacketHeader(type, payload_size, sequence_number, checksum),
+        type,
+        sequence_number,
+        checksum,
         addr,
         msg.subspan(PacketHeader::header_size_, payload_size)
     );
