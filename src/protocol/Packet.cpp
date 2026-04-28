@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <arpa/inet.h>
 #include <iostream>
+#include <iomanip>
 
 #include "protocol/Packet.hpp"
 #include "protocol/PacketHeader.hpp"
@@ -58,10 +59,15 @@ Packet Packet::parse(std::span<const std::byte> bytes, ssize_t len, SocketAddres
         (static_cast<uint32_t>(std::to_integer<uint8_t>(msg[8])) << 16) |
         (static_cast<uint32_t>(std::to_integer<uint8_t>(msg[9])) << 8)  |
          static_cast<uint32_t>(std::to_integer<uint8_t>(msg[10]));
-    for (ssize_t i = 0; i < msg.size(); i++) {
-        std::cout << static_cast<char>(msg[i]);
-    }
-    std::cout << std::endl;
+    // std::cout << "Packet contents from Parse: ";
+    // for (ssize_t i = 0; i < msg.size(); i++) {
+    //     std::cout << std::hex
+    //             << std::setw(2)
+    //             << std::setfill('0')
+    //             << static_cast<int>(std::to_integer<unsigned char>(msg[i]))
+    //             << " ";
+    // }
+    // std::cout << std::dec << "\n";
     return Packet(
         type,
         sequence_number,

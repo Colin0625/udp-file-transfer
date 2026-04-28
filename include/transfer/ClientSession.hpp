@@ -1,5 +1,6 @@
 #include <thread>
 #include <filesystem>
+#include <fstream>
 
 #include "transfer/Endpoint.hpp"
 #include "protocol/Packet.hpp"
@@ -12,6 +13,11 @@ private:
     Endpoint endpoint_;
     SocketAddress server_address_;
     SessionState state_;
+    std::filesystem::path current_requested_path_;
+    std::filesystem::path current_output_path_;
+    std::ofstream current_output_file_;
+    uint64_t expected_packets_;
+    bool transferring;
 
 public:
     ClientSession();
@@ -31,4 +37,5 @@ public:
 
     void connect_to_server();
     void request_file(const std::filesystem::path& file_path);
+    void receive_file();
 };

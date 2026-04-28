@@ -1,11 +1,15 @@
 #include <thread>
+#include <cstddef>
+#include <filesystem>
+#include <string>
+#include <chrono>
 
 #include "transfer/ClientSession.hpp"
 #include "utility/Queue.hpp"
 #include "protocol/Packet.hpp"
 
 ClientSession::ClientSession()
- : endpoint_{}, server_address_{}, state_(SessionState::OFF) {}
+ : endpoint_{}, server_address_{}, state_(SessionState::OFF), current_requested_path_{}, current_output_path_{}, current_output_file_{}, expected_packets_{}, transferring(false) {}
 
 
 void ClientSession::set_server_address(const SocketAddress& addr) {
@@ -78,7 +82,46 @@ void ClientSession::handle_connecting(Packet& packet) {
 }
 
 void ClientSession::handle_connection(Packet& packet) {
+    if (packet.get_message_type() == MessageType::METADATA) {
+        std::string output_folder = "test-output";
+        std::string output_filename = current_requested_path_.filename();
+        current_output_path_ = std::filesystem::path(output_folder) /output_filename;
+        
+        uint64_t file_size = 0;
+        std::vector<std::byte> bytes = packet.get_payload();
 
+        for (int i = 0; i < 8; ++i) {
+            file_size <<= 8;
+            file_size |= static_cast<uint64_t>(std::to_integer<unsigned char>(bytes[i]));
+        }
+        std::cout << "File size: " << file_size << std::endl;
+
+        std::filesystem::remove(current_output_path_);
+        current_output_file_ = std::ofstream(current_output_path_, std::ios::binary);
+        std::filesystem::resize_file(current_output_path_, file_size);
+        expected_packets_ = (file_size + 1024 - 1) / 1024;
+        std::cout << "Packets to receive: " << expected_packets_ << std::endl;
+        if (!current_output_file_) {
+            std::cout << "Failed to create output file!" << std::endl;
+            current_requested_path_ = std::filesystem::path{};
+            current_output_path_ = std::filesystem::path{};
+            current_output_file_ = std::ofstream{};
+            expected_packets_ = 0;
+            state_ = SessionState::CONNECTED;
+            return;
+        }
+        state_ = SessionState::TRANSFERRING;
+        ssize_t sent = endpoint_.send_packet(Packet(MessageType::ACK), server_address_);
+        std::cout << "Sent an ack packet for confirmation of readiness for file transfer" << std::endl;
+        receive_file();
+        return;
+    }
+    else if (packet.get_message_type() == MessageType::ERROR) {
+        std::cout << "Server did not find " << current_requested_path_.string() << std::endl;
+        current_requested_path_ = std::filesystem::path{};
+        current_output_path_ = std::filesystem::path{};
+        current_output_file_ = std::ofstream{};
+    }
 }
 
 void ClientSession::handle_metatransfer(Packet& packet) {
@@ -86,7 +129,33 @@ void ClientSession::handle_metatransfer(Packet& packet) {
 }
 
 void ClientSession::handle_transferring(Packet& packet) {
+    if (packet.get_message_type() == MessageType::DATA) {
+        uint32_t seq = packet.get_header().sequence_number_;
+        uint16_t payload_size = packet.get_header().payload_size_;
+        std::cout << "Received packet " << seq << std::endl;
 
+
+
+        std::streamoff offset = static_cast<std::streamoff>(seq) * 1024;
+
+        current_output_file_.seekp(offset);
+
+        if (!current_output_file_) {
+            throw std::runtime_error("seekp failed");
+        }
+
+        current_output_file_.write(
+            reinterpret_cast<const char*>(packet.get_payload().data()),
+            payload_size
+        );
+        if (!current_output_file_) {
+            throw std::runtime_error("write failed");
+        }
+        std::cout << "Finished writing packet " << seq << std::endl;
+        if (seq == expected_packets_ - 1) {
+            transferring = false;
+        }
+    }
 }
 
 void ClientSession::handle_closing(Packet& packet) {
@@ -110,4 +179,14 @@ void ClientSession::request_file(const std::filesystem::path& file_path) {
     p.print();
     ssize_t sent = endpoint_.send_packet(p, server_address_);
     std::cout << "Sent " << sent << " bytes to server requesting " << file_string << std::endl;
+    current_requested_path_ = file_path;
+}
+
+void ClientSession::receive_file() {
+    transferring = true;
+    while (transferring) {
+        manage_packet();
+    }
+    current_output_file_.flush();
+    std::cout << "Finished receiving packets" << std::endl;
 }

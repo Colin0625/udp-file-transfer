@@ -32,5 +32,5 @@ public:
     const std::string& get_sender_ip() const;
     const SocketAddress& get_sender_addr() const;
     void print() const;
-    static const uint16_t max_packet_size = 1024;
+    static const uint16_t max_packet_size = 1035;
 };
