@@ -10,7 +10,15 @@
 #include "protocol/MessageType.hpp"
 #include "transfer/ClientSession.hpp"
 
-int main() {
+
+// test-file/matthew.jpg
+// test-file/cpp.png
+
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        std::cout << "Must pass requested file" << std::endl;
+        return 0;
+    }
     ClientSession client{};
     // SocketAddress server_addr = SocketAddress::localhost(5000);
     SocketAddress server_addr(5000, "100.110.209.74"); // desktop as server
@@ -18,7 +26,7 @@ int main() {
     client.start();
 
     client.connect_to_server();
-    client.request_file(std::filesystem::path("test-files/cpp.png"));
+    client.request_file(std::filesystem::path(argv[1]));
     client.manage_packet();
 
     client.stop();
