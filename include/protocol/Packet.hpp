@@ -17,6 +17,7 @@ private:
     static uint32_t checksum(PacketHeader header, std::span<const std::byte> bytes);
     static bool compare_checksum(PacketHeader header, std::span<const std::byte> bytes);
 public:
+    bool verbose = true;
     Packet(MessageType type, uint32_t sequence_number, std::span<const std::byte> payload);
     // Packet(const PacketHeader& header, const SocketAddress& addr, std::span<const std::byte> payload);
     Packet(MessageType type);

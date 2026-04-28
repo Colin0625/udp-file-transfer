@@ -168,6 +168,9 @@ Packet ServerSession::make_metadata_packet(const std::filesystem::path& path) {
 void ServerSession::send_file() {
     constexpr size_t CHUNK_SIZE = 1024;
 
+    int sleep_milliseconds = 0;
+
+
     std::vector<std::byte> buffer(CHUNK_SIZE);
     uint64_t seq = 0;
     while (true) {
@@ -178,9 +181,11 @@ void ServerSession::send_file() {
         std::vector<std::byte> payload(buffer.begin(), buffer.begin() + bytes_read);
         Packet p(MessageType::DATA, seq, payload);
         ssize_t sent = endpoint_.send_packet(p, current_client_address_);
-        std::cout << "Sent packet " << seq << " with " << sent << " bytes" << std::endl;
+        if (verbose) {
+            std::cout << "Sent packet " << seq << " with " << sent << " bytes" << std::endl;
+        }
         seq++;
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(sleep_milliseconds));
         if (bytes_read < CHUNK_SIZE) break;
     }
     std::cout << "Finished sending file, cleaning up" << std::endl;

@@ -17,6 +17,7 @@ private:
     uint64_t total_file_packets_;
 
 public:
+    bool verbose = true;
     ServerSession();
     void bind_server(int port);
     void start();

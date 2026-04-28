@@ -20,6 +20,7 @@ private:
     bool transferring;
 
 public:
+    bool verbose = true;
     ClientSession();
     void set_server_address(const SocketAddress& addr);
     void start();

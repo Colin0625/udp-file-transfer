@@ -132,7 +132,9 @@ void ClientSession::handle_transferring(Packet& packet) {
     if (packet.get_message_type() == MessageType::DATA) {
         uint32_t seq = packet.get_header().sequence_number_;
         uint16_t payload_size = packet.get_header().payload_size_;
-        std::cout << "Received packet " << seq << std::endl;
+        if (verbose) {
+            std::cout << "Received packet " << seq << std::endl;
+        }
 
 
 
@@ -151,7 +153,9 @@ void ClientSession::handle_transferring(Packet& packet) {
         if (!current_output_file_) {
             throw std::runtime_error("write failed");
         }
-        std::cout << "Finished writing packet " << seq << std::endl;
+        if (verbose) {
+            std::cout << "Finished writing packet " << seq << std::endl;
+        }
         if (seq == expected_packets_ - 1) {
             transferring = false;
         }
