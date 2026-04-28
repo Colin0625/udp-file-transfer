@@ -19,7 +19,7 @@
 int main() {
     ServerSession server{};
     std::cout << sizeof(sockaddr_in) << " " << sizeof(std::string) << std::endl;
-
+    server.verbose = false;
 
 
     server.bind_server(5000);
