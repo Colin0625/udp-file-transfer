@@ -102,9 +102,10 @@ void ServerSession::handle_connection(Packet& packet) {
         for (const std::byte& b : payload) {
             file_name.push_back(static_cast<char>(b));
         }
-        std::cout << file_name << std::endl;
+        std::filesystem::path file_path = std::filesystem::path("test-files") / file_name;
+        std::cout << file_path.string() << std::endl;
 
-        std::filesystem::path file_path = file_name;
+        
         std::ifstream file_stream;
         bool found = find_file(file_path, file_stream);
         if (found) {

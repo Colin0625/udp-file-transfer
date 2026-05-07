@@ -15,7 +15,7 @@ UdpSocket::UdpSocket() {
 }
 
 void UdpSocket::bind_socket(const SocketAddress& addr) {
-    if (bind(socket_fd_, addr.data(), sizeof(addr)) < 0) {
+    if (bind(socket_fd_, addr.data(), sizeof(*addr.data())) < 0) {
         throw std::runtime_error(std::string("bind_socket failed: ") + strerror(errno));
     }
 }

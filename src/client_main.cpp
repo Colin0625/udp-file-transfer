@@ -22,7 +22,8 @@ int main(int argc, char* argv[]) {
     ClientSession client{};
     client.verbose = false;
     // SocketAddress server_addr = SocketAddress::localhost(5000);
-    SocketAddress server_addr(5000, "100.110.209.74"); // desktop as server
+    // SocketAddress server_addr(5000, "100.110.209.74"); // desktop as server
+    SocketAddress server_addr(5000, "10.105.101.219");
     client.set_server_address(server_addr);
     client.start();
 
