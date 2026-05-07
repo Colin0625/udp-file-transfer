@@ -4,7 +4,7 @@ This is my first networking project! It is a very
 simple file transfer program that operates over UDP.
 This was a small project, so I told Codex to write
 me a README, because it would do a better job explaining
-the code. Everything below this point is from Codex, and it definitely explains things pretty accurately!
+the code. Everything below this point is from Codex, and it definitely explains things pretty accurately.
 
 ---
 
