@@ -1,5 +1,12 @@
 # UDP File Transfer
 
+This is my first networking project! It is a very 
+simple file transfer program that operates over UDP.
+This was a small project, so I told Codex to write
+me a README, because it would do a better job explaining
+the code. Everything below this point is from Codex, and it definitely explains things pretty accurately!
+---
+
 This project is a small C++20 file-transfer program built directly on UDP sockets. It includes a server, a client, a custom binary packet format, and session logic for requesting a file from the server and reconstructing it on the client.
 
 The code is organized as a learning-oriented transport layer rather than a production file-transfer tool. It demonstrates packet serialization, socket address handling, a receive thread with a blocking queue, simple client/server state machines, and binary file chunking.
@@ -104,7 +111,7 @@ The server binds to UDP port `5000`.
 The client server address is currently hardcoded in `src/client_main.cpp`:
 
 ```cpp
-SocketAddress server_addr(5000, "10.105.101.219");
+SocketAddress server_addr(5000, "XXX.XXX.XXX.XXX");
 ```
 
 For local testing on one machine, change that to:
